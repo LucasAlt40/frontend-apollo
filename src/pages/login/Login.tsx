@@ -8,7 +8,9 @@ const Login = () => {
     <>
       <main>
         <h1>APOLLO MUSIC</h1>
-        <p>Lorem ipsum dolor sit amet consectetur.</p>
+        <p className="text-3xl font-bold underline">
+          Lorem ipsum dolor sit amet consectetur.
+        </p>
       </main>
       <div className={style.loginForm}>
         <p>Quem é você?</p>
