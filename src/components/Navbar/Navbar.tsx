@@ -1,17 +1,16 @@
 import { Grid, Home, Music } from "react-feather";
-import style from "./navbar.module.css";
 
 const Navbar = () => {
   return (
-    <nav className={style.nav}>
-      <div className={style.content}>
-        <a className={style.a} href="#">
+    <nav className="fixed bottom-3 w-11/12 left-1/2 -translate-x-1/2 p-5 bg-primary rounded-xl">
+      <div className="flex justify-between text-white px-4">
+        <a href="#">
           <Grid />
         </a>
-        <a className={style.a} href="/establishment">
+        <a href="/establishment/home">
           <Home />
         </a>
-        <a className={style.a} href="#">
+        <a href="#">
           <Music />
         </a>
       </div>
