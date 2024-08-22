@@ -1,0 +1,21 @@
+.nav{
+    background-color: var(--color-rose);
+    color: white;
+    width: 90%;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px 30px;
+    border-radius: 16px;
+}
+
+.content{
+    display: flex;
+    justify-content: space-between;
+}
+
+.a{
+    color: inherit;
+    text-decoration: none;
+}
