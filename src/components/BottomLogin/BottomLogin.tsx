@@ -159,11 +159,7 @@ const BottomLogin: React.FC = () => {
   return (
     <div className={style.loginForm}>
       {step > 0 && (
-        <ArrowLeft
-          size={32}
-          className="absolute top-1 ml-4 mt-4 self-start"
-          onClick={handleBack}
-        />
+        <ArrowLeft size={32} className="absolute top-0 ml-4 mt-4 self-start" onClick={handleBack} />
       )}
       <p className="mb-4">{step === 1 ? "Proprietário" : "Quem é você?"}</p>
       <div className="flex flex-col justify-between items-center">
