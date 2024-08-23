@@ -1,61 +1,162 @@
-import axios from "axios";
 import DrawerAccount from "./components/DrawerAccount";
 import { useEffect, useState } from "react";
-import { Owner } from "../@types/OwnerType";
 import { useSearchParams } from "react-router-dom";
-
-const sendAuthorizationCode = (code: string) => {
-  axios
-    .post(`http://localhost:8080/auth/api`, {
-      headers: {
-        ContentType: "application/json",
-        Authorization:
-          "Bearer eyJhbGciOiJSUzI1NiJ9.eyJvd25lcklkIjoxLCJlc3RhYmxpc2htZW50SWQiOjEsImVtYWlsIjoiemluaG9AZ21haWwuY29tIiwiZXhwIjoxNzI0NDM5ODg5fQ.bAvNAWvqMDfhKVK6dMwL4pwFbbVFnPGEjmyGe9B94yd4PLHKl7JiLQwPW2MbRG_Ncf51oTG9lMHXSsSjG9klHCQi-Q52JnXcofuy1RZTa-GT_lwGA_f9pVqViU9rjRQSN2dJn9-Nz9IepyyGiUZEFCEIgC6dLdFqD2dAF0z6eCqkFkHfXb7J_ua0Ol69R7B1K3wltx4wgEXWs3pj4iLtumZ5597dTPAwamI6qF6FFt7H30Y9i-m7QIar1CTCiUgN9275XAczsQJyYpbVABCToDgp3sRvQNvxxZfwb4J0AYiNkZ7IRIgHP1a6TbTSm8VACxnnJGdg57vV1LquPeuHNw",
-      },
-      body: {
-        code: code,
-      },
-    })
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-};
+import apiCommonInstance from "../../../api/apiCommonInstance";
+import { Button, useToast } from "@chakra-ui/react";
+import { CardEstablishment } from "./components/CardEstablishment";
+import { OwnerType } from "../@types/OwnerType";
+import { EstablishmentType } from "../@types/EstablishmentType";
+import { Plus } from "react-feather";
+import CardPlaylist from "./components/CardPlaylist";
 
 const Home = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const toast = useToast();
+  const [searchParams] = useSearchParams();
+  const [owner, setOwner] = useState<OwnerType>({} as OwnerType);
+  const [establishment, setEstablishment] = useState<EstablishmentType>(
+    {} as EstablishmentType
+  );
 
+  // Only exist this var ff the owner tries to link with Spotify
   const code = searchParams.get("code");
 
-  const [owner, setOwner] = useState<Owner>({} as Owner);
+  const getOwner = async () => {
+    try {
+      const response = await apiCommonInstance.get("/owner");
 
-  const getOwner = () => {
-    axios
-      .get("http://localhost:8080/owner", {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJSUzI1NiJ9.eyJvd25lcklkIjoxLCJlc3RhYmxpc2htZW50SWQiOjEsImVtYWlsIjoiemluaG9AZ21haWwuY29tIiwiZXhwIjoxNzI0NDM5ODg5fQ.bAvNAWvqMDfhKVK6dMwL4pwFbbVFnPGEjmyGe9B94yd4PLHKl7JiLQwPW2MbRG_Ncf51oTG9lMHXSsSjG9klHCQi-Q52JnXcofuy1RZTa-GT_lwGA_f9pVqViU9rjRQSN2dJn9-Nz9IepyyGiUZEFCEIgC6dLdFqD2dAF0z6eCqkFkHfXb7J_ua0Ol69R7B1K3wltx4wgEXWs3pj4iLtumZ5597dTPAwamI6qF6FFt7H30Y9i-m7QIar1CTCiUgN9275XAczsQJyYpbVABCToDgp3sRvQNvxxZfwb4J0AYiNkZ7IRIgHP1a6TbTSm8VACxnnJGdg57vV1LquPeuHNw",
-        },
-      })
-      .then((res) => setOwner(res.data))
-      .catch((err) => err);
+      if (response.status === 200) {
+        setOwner(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  useEffect(() => {
-    getOwner();
-  }, []);
+  const getEstablishment = async () => {
+    try {
+      const response = await apiCommonInstance.get("/establishment");
 
-  if (!owner.hasThirdPartyAccess) {
+      if (response.status === 200) {
+        setEstablishment(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const sendAuthorizationCode = async (code: string) => {
+    try {
+      const response = await apiCommonInstance.post("/auth/api", {
+        code: code,
+      });
+
+      if (response.status === 200) {
+        toast({
+          position: "top",
+          title: "Conta Spotify vinculada com sucesso!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      if (response.status !== 200) {
+        toast({
+          position: "top",
+          title: "Opa! Parece que algo deu errado.",
+          description:
+            "Ocorreu um problema ao vincular com o Spotify. Tente novamente.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+    } catch {
+      toast({
+        position: "top",
+        title: "Opa! Parece que algo deu errado.",
+        description:
+          "Ocorreu um problema ao vincular com o Spotify. Tente novamente.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const createPlaylist = async () => {
+    try {
+      const response = await apiCommonInstance.post("/establishment/playlist");
+
+      if (response.status === 200) {
+        toast({
+          position: "top",
+          title: "Playlist criada com sucesso!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      if (response.status !== 200) {
+        toast({
+          position: "top",
+          title: "Opa! Parece que algo deu errado.",
+          description:
+            "Ocorreu um problema ao criar a playlist. Tente novamente.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+    } catch {
+      toast({
+        position: "top",
+        title: "Opa! Parece que algo deu errado.",
+        description:
+          "Ocorreu um problema ao criar a playlist. Tente novamente.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  if (Object.keys(owner).length && !owner.hasThirdPartyAccess) {
     if (code !== null) {
       sendAuthorizationCode(code);
     }
   }
 
+  useEffect(() => {
+    getOwner();
+    getEstablishment();
+  }, []);
+
   return (
     <>
-      <div className="flex justify-between items-center">
-        <p className="font-bold">{owner?.name}</p>
+      <div className="flex justify-between items-center mb-5">
+        <p className="font-bold">{owner.name}</p>
         <DrawerAccount owner={owner} />
       </div>
-      <p>Turn on establishment option</p>
+
+      <div className="mb-5">
+        <CardEstablishment establishment={establishment} />
+      </div>
+
+      <div className="mb-5">
+        {establishment.playlist ? (
+          <CardPlaylist playlist={establishment.playlist} />
+        ) : (
+          <Button rightIcon={<Plus size={20} />} onClick={createPlaylist}>
+            Criar playlist
+          </Button>
+        )}
+      </div>
     </>
   );
 };

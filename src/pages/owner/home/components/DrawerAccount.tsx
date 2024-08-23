@@ -9,14 +9,22 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Link, LogOut, Trash, User } from "react-feather";
-import { Owner } from "../../@types/OwnerType";
+import { OwnerType } from "../../@types/OwnerType";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 type Props = {
-  owner: Owner;
+  owner: OwnerType;
 };
 
 const DrawerAccount = ({ owner }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+
+  const onLogoutOwner = () => {
+    Cookies.remove("accessToken");
+    navigate("/");
+  };
 
   return (
     <>
@@ -35,7 +43,12 @@ const DrawerAccount = ({ owner }: Props) => {
             </div>
             <div className="mb-5">
               <p className="font-bold">Spotify</p>
-              {!owner.hasThirdPartyAccess ? (
+              {owner.hasThirdPartyAccess ? (
+                <a className="flex justify-between" href="">
+                  Desvincular conta
+                  <Trash />
+                </a>
+              ) : (
                 <a
                   className="flex justify-between"
                   href={import.meta.env.VITE_THIRD_PARTY_AUTHORIZATION_URL}
@@ -43,17 +56,12 @@ const DrawerAccount = ({ owner }: Props) => {
                   Vincular uma conta Spotify
                   <Link />
                 </a>
-              ) : (
-                <a className="flex justify-between" href="">
-                  Desvincular conta
-                  <Trash />
-                </a>
               )}
             </div>
             <div className="mb-5">
-              <a className="flex justify-between text-primary" href="">
+              <Button onClick={onLogoutOwner}>
                 Sair <LogOut />
-              </a>
+              </Button>
             </div>
           </DrawerBody>
 
