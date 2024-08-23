@@ -1,4 +1,11 @@
-import { ArrowRight, Eye, EyeOff, Shield, User } from "react-feather";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Shield,
+  User,
+} from "react-feather";
 import style from "./index.module.css";
 import React, { useState } from "react";
 import {
@@ -37,6 +44,18 @@ const BottomLogin: React.FC = () => {
     try {
       const response = await apiCommonInstance.post("/auth/owner", formData);
 
+      if (response.status !== 200) {
+        toast({
+          position: "top",
+          title: "Opa! Parece que algo deu errado.",
+          description: "Ocorreu um problema ao fazer o login. Tente novamente.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
       Cookies.set("accessToken", response.data.accessToken, {
         expires: 2 / 24,
       });
@@ -52,6 +71,10 @@ const BottomLogin: React.FC = () => {
         isClosable: true,
       });
     }
+  };
+
+  const handleBack = () => {
+    setStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
   const steps = [
@@ -135,7 +158,10 @@ const BottomLogin: React.FC = () => {
 
   return (
     <div className={style.loginForm}>
-      <p>{step === 1 ? "Proprietário" : "Quem é você?"}</p>
+      {step > 0 && (
+        <ArrowLeft size={32} className="absolute top-1 ml-4 mt-4 self-start" onClick={handleBack} />
+      )}
+      <p className="mb-4">{step === 1 ? "Proprietário" : "Quem é você?"}</p>
       <div className="flex flex-col justify-between items-center">
         {steps[step]}
       </div>
