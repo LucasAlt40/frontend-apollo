@@ -1,8 +1,37 @@
-.loginForm {
+.container {
+  background: var(--color-rose);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.title {
+  color: #fff;
+  height: 65%;
+  max-height: 65%;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50%;
+  text-align: center;
+}
+
+.title h1 {
+  font-family: "Montserrat-Bold", Helvetica;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  line-height: 24px;
+}
+
+.title p {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  line-height: 24px;
+  margin-top: 1rem;
 }
