@@ -7,7 +7,7 @@ const Navbar = () => {
         <a href="#">
           <Grid />
         </a>
-        <a href="/establishment/home">
+        <a href="/owner/home">
           <Home />
         </a>
         <a href="#">

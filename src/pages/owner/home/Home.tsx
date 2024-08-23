@@ -1,4 +1,5 @@
 import axios from "axios";
+import DrawerAccount from "./components/DrawerAccount";
 
 const Home = () => {
   axios
@@ -17,7 +18,7 @@ const Home = () => {
 
   return (
     <>
-      <p>Drawer account</p>
+      <DrawerAccount />
       <p>Turn on establishment option</p>
     </>
   );
