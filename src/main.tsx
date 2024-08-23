@@ -4,8 +4,8 @@ import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/login/Login.tsx";
-import Establishment from "./layouts/EstablishmentOwnerLayout.tsx";
 import Home from "./pages/home/Home.tsx";
+import OwnerLayout from "./layouts/OwnerLayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,8 +13,8 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/establishment",
-    element: <Establishment />,
+    path: "/owner",
+    element: <OwnerLayout />,
     children: [
       {
         path: "home",
