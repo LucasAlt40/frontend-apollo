@@ -6,7 +6,7 @@ const OwnerLayout = () => {
   return (
     <>
       <Header />
-      <main className="mt-8 mb-20 p-3">
+      <main className="mt-8 mb-20 p-4">
         <Outlet />
       </main>
       <Navbar />

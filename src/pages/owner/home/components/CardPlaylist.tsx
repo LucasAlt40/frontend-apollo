@@ -15,11 +15,8 @@ const CardPlaylist = ({ playlist }: Props) => {
         alt="Imagem da Playlist"
       />
       <div className="my-5">
-        <div>
-          <span className="text-sm text-muted">Nome da playlist</span>
-          <p className="text-2xl font-bold">{playlist.name}</p>
-        </div>
-        <p className="font-bold">{playlist.description}</p>
+        <p className="text-2xl font-bold">{playlist.name}</p>
+        <p>{playlist.description}</p>
       </div>
       <div className="w-full flex justify-end">
         <a
