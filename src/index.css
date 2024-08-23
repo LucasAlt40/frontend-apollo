@@ -3,9 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --color-primary: #1c1c25;
+  --color-primary: hwb(240 11% 85%);
   --color-rose: #e11d48;
-
   --font-primary: "Inter", sans-serif;
 }
 

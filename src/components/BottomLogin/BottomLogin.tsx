@@ -60,7 +60,7 @@ const BottomLogin: React.FC = () => {
         expires: 2 / 24,
       });
 
-      navigate("/home/owner");
+      navigate("/owner/home");
     } catch {
       toast({
         position: "top",
