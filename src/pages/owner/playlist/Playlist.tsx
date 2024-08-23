@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { PlaylistType } from "../@types/PlaylistType";
 import apiCommonInstance from "../../../api/apiCommonInstance";
 import defaultImage from "../../../assets/images/default.jpg";
-import { PlusCircle } from "react-feather";
-import { Button, useToast } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import BlockedGenre from "./components/BlockedGenre";
+import DrawerGenres from "../../../components/DrawerGenres/DrawerGenres";
 
 const Playlist = () => {
   const toast = useToast();
@@ -114,9 +114,7 @@ const Playlist = () => {
             playlist.blockedGenres.map((genre) => (
               <BlockedGenre genre={genre} />
             ))}
-          <Button>
-            <PlusCircle />
-          </Button>
+          <DrawerGenres genres={playlist.genres} />
         </div>
       </div>
 
