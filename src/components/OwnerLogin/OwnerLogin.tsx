@@ -74,7 +74,7 @@ const OwnerLogin = () => {
           type="text"
           focusBorderColor="var(--color-rose)"
           width="auto"
-          placeholder="Id do Estabelecimento"
+          placeholder="Código do Estabelecimento"
           name="establishmentId"
           value={formData.establishmentId}
           onChange={handleChange}

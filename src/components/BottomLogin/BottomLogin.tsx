@@ -1,34 +1,82 @@
-import { ArrowLeft, Shield, User } from "react-feather";
-import style from "./index.module.css";
-import React, { useState } from "react";
+import { useState, ReactNode } from "react";
 import { Button } from "@chakra-ui/react";
-import OwnerLogin from "../OwnerLogin/OwnerLogin";
+import { ArrowLeft, Shield, User } from "react-feather";
 
-const BottomLogin: React.FC = () => {
+import style from "./index.module.css";
+import OwnerLogin from "../OwnerLogin/OwnerLogin";
+import UserLogin from "../UserLogin/UserLogin";
+
+interface User {
+  establishmentId: string;
+  username: string;
+  genres: string;
+}
+
+const BottomLogin = () => {
   const [step, setStep] = useState(0);
+  const [isOwner, setIsOwner] = useState(false);
+  const [user, setUser] = useState<User>({
+    establishmentId: "",
+    username: "",
+    genres: "",
+  });
 
   const handleBack = () => {
-    setStep((prevStep) => prevStep - 1);
+    if (step > 0) {
+      setStep(step - 1);
+    }
+    if (step <= 1) {
+      setIsOwner(false);
+    }
   };
 
-  const steps = [
-    <>
-      <Button
-        colorScheme="red"
-        variant="outline"
-        rightIcon={<Shield />}
-        className="m-4"
-        onClick={() => setStep((prevState) => prevState + 1)}
-      >
-        Proprietário
-      </Button>
+  const handleStepChange = (newStep: number, ownerStatus: boolean) => {
+    setIsOwner(ownerStatus);
+    setStep(newStep);
+  };
 
-      <Button className="m-4" colorScheme="red" rightIcon={<User />}>
-        Usuário
-      </Button>
-    </>,
-    <OwnerLogin />,
-  ];
+  const renderStepContent = (currentStep: number): ReactNode => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <>
+            <Button
+              colorScheme="red"
+              variant="outline"
+              rightIcon={<Shield />}
+              className="m-4"
+              onClick={() => handleStepChange(1, true)}
+            >
+              Proprietário
+            </Button>
+
+            <Button
+              className="m-4"
+              colorScheme="red"
+              rightIcon={<User />}
+              onClick={() => handleStepChange(1, false)}
+            >
+              Usuário
+            </Button>
+          </>
+        );
+      case 1:
+        return isOwner ? (
+          <OwnerLogin />
+        ) : (
+          <UserLogin setStep={setStep} setUser={setUser} />
+        );
+      case 2:
+        return <div></div>;
+      default:
+        return null;
+    }
+  };
+
+  const getStepTitle = (): string => {
+    if (step === 1) return isOwner ? "Proprietário" : "Estabelecimento";
+    return "Quem é você?";
+  };
 
   return (
     <div className={style.loginForm}>
@@ -39,9 +87,9 @@ const BottomLogin: React.FC = () => {
           onClick={handleBack}
         />
       )}
-      <p className="mb-4">{step === 1 ? "Proprietário" : "Quem é você?"}</p>
+      <p className="mb-4">{getStepTitle()}</p>
       <div className="flex flex-col justify-between items-center">
-        {steps[step]}
+        {renderStepContent(step)}
       </div>
     </div>
   );
