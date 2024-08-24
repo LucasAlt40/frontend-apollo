@@ -41,7 +41,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
         `/establishment/${formData.establishmentId}`
       );
 
-      if (!response.data.isTurnOff) {
+      if (!response.data.isOff) {
         setShowUsername(true);
       } else {
         showToast(
