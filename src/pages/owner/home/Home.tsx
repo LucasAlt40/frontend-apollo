@@ -11,11 +11,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { CardEstablishment } from "./components/CardEstablishment";
-import { OwnerType } from "../@types/OwnerType";
 import { EstablishmentType } from "../@types/EstablishmentType";
 import { Plus } from "react-feather";
 import CardPlaylist from "./components/CardPlaylist";
 import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
+import { OwnerType } from "../../../@types/OwnerType";
 
 const Home = () => {
   const toast = useToast();

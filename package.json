@@ -18,6 +18,7 @@
     "axios": "^1.7.4",
     "framer-motion": "^11.3.29",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

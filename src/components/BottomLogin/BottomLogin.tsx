@@ -10,7 +10,7 @@ import style from "./index.module.css";
 import OwnerLogin from "../OwnerLogin/OwnerLogin";
 import UserLogin from "../UserLogin/UserLogin";
 import DrawerGenres from "../DrawerGenres/DrawerGenres";
-import { UserType } from "../@types/UserType";
+import { UserType } from "../../@types/UserType";
 
 const BottomLogin = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +50,7 @@ const BottomLogin = () => {
     if (user.establishmentId && user.genres.length > 0 && user.username) {
       const response = await apiCommonInstance.post("/auth/user", user);
       if (response.data) {
-        Cookies.set("user", JSON.stringify(user), {
+        Cookies.set("accessToken", response.data.accessToken, {
           expires: 2 / 24,
         });
         navigate("user/home");
