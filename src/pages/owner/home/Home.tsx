@@ -8,6 +8,7 @@ import {
   AlertIcon,
   AlertTitle,
   Button,
+  Select,
   useToast,
 } from "@chakra-ui/react";
 import { CardEstablishment } from "./components/CardEstablishment";
@@ -16,6 +17,7 @@ import { Plus } from "react-feather";
 import CardPlaylist from "./components/CardPlaylist";
 import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
 import { OwnerType } from "../../../@types/OwnerType";
+import { AvailableDevicesType } from "../@types/DevicesType";
 
 const Home = () => {
   const toast = useToast();
@@ -24,6 +26,8 @@ const Home = () => {
   const [establishment, setEstablishment] = useState<EstablishmentType>(
     {} as EstablishmentType
   );
+  const [availableDevices, setAvailableDevices] =
+    useState<AvailableDevicesType>();
 
   const [isOpenDrawerAlert, setIsOpenDrawerAlert] = useState(true);
 
@@ -51,6 +55,60 @@ const Home = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const getAvailableDevices = async () => {
+    try {
+      const response = await apiCommonInstance.get("/establishment/devices");
+
+      if (response.status === 200) {
+        setAvailableDevices(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setMainDevice = async (deviceId: string) => {
+    try {
+      const response = await apiCommonInstance.post("/establishment/devices", {
+        id: deviceId,
+      });
+
+      if (response.status === 201) {
+        toast({
+          position: "top",
+          title: "Dispositivo atual definido com sucesso!",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      if (response.status !== 201) {
+        toast({
+          position: "top",
+          title: "Opa! Parece que algo deu errado.",
+          description:
+            "Ocorreu um problema ao definir o dispositivo atual. Tente novamente.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+    } catch {
+      toast({
+        position: "top",
+        title: "Opa! Parece que algo deu errado.",
+        description:
+          "Ocorreu um problema ao definir o dispositivo atual. Tente novamente.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -145,6 +203,7 @@ const Home = () => {
   useEffect(() => {
     getOwner();
     getEstablishment();
+    getAvailableDevices();
   }, []);
 
   return (
@@ -169,6 +228,19 @@ const Home = () => {
 
       <div className="mb-5">
         <CardEstablishment establishment={establishment} />
+      </div>
+
+      <div className="mb-5">
+        <Select
+          placeholder="Selecione um dispositivo"
+          onChange={(e) => {
+            if (e.target.value.length > 0) setMainDevice(e.target.value);
+          }}
+        >
+          {availableDevices?.devices.map((device) => (
+            <option value={device.id}>{device.name}</option>
+          ))}
+        </Select>
       </div>
 
       {establishment.playlist && (

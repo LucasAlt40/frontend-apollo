@@ -21,7 +21,7 @@ const BlockedGenre = ({ genre }: Props) => {
       if (response.status === 200) {
         toast({
           position: "top",
-          title: "Genêros bloqueados com sucesso!",
+          title: "Genêro desbloqueado com sucesso!",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -33,7 +33,7 @@ const BlockedGenre = ({ genre }: Props) => {
         position: "top",
         title: "Opa! Parece que algo deu errado.",
         description:
-          "Ocorreu um problema ao bloquear os genêros da playlist. Tente novamente.",
+          "Ocorreu um problema ao desbloquear o genêro da playlist. Tente novamente.",
         status: "error",
         duration: 5000,
         isClosable: true,
