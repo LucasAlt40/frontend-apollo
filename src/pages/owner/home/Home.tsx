@@ -1,214 +1,45 @@
 import DrawerAccount from "./components/DrawerAccount";
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   Alert,
   AlertDescription,
   AlertIcon,
   AlertTitle,
-  Button,
-  Select,
-  useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { CardEstablishment } from "./components/CardEstablishment";
-import { EstablishmentType } from "../@types/EstablishmentType";
-import { Plus } from "react-feather";
 import CardPlaylist from "./components/CardPlaylist";
 import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
-import { OwnerType } from "../../../@types/OwnerType";
-import { AvailableDevicesType } from "../@types/DevicesType";
-import apiCommonInstance from "../../../api/config/apiCommonInstance";
+import CardDevices from "./components/CardDevices";
+import { useQuery } from "@tanstack/react-query";
+import { getOwner } from "../../../api/services/OwnerService";
+import { sendAuthorizationCode } from "../../../api/services/AuthService";
 
 const Home = () => {
-  const toast = useToast();
-  const [searchParams] = useSearchParams();
-  const [owner, setOwner] = useState<OwnerType>({} as OwnerType);
-  const [establishment, setEstablishment] = useState<EstablishmentType>(
-    {} as EstablishmentType
-  );
-  const [availableDevices, setAvailableDevices] =
-    useState<AvailableDevicesType>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["owner"],
+    refetchOnWindowFocus: false,
+    queryFn: () => getOwner(),
+  });
 
-  const [isOpenDrawerAlert, setIsOpenDrawerAlert] = useState(true);
+  if (!isLoading && !isError) {
+    if (!data?.data.hasThirdPartyAccess) {
+      // When owner tries to link with Spotify
+      const code = searchParams.get("code");
 
-  // When owner tries to link with Spotify
-  const code = searchParams.get("code");
-
-  const getOwner = async () => {
-    try {
-      const response = await apiCommonInstance.get("/owner");
-
-      if (response.status === 200) {
-        setOwner(response.data);
+      if (code !== null) {
+        sendAuthorizationCode(code);
+        searchParams.delete("code");
+        setSearchParams(searchParams);
       }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getEstablishment = async () => {
-    try {
-      const response = await apiCommonInstance.get("/establishment");
-
-      if (response.status === 200) {
-        setEstablishment(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getAvailableDevices = async () => {
-    try {
-      const response = await apiCommonInstance.get("/establishment/devices");
-
-      if (response.status === 200) {
-        setAvailableDevices(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const setMainDevice = async (deviceId: string) => {
-    try {
-      const response = await apiCommonInstance.post("/establishment/devices", {
-        id: deviceId,
-      });
-
-      if (response.status === 201) {
-        toast({
-          position: "top",
-          title: "Dispositivo atual definido com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-
-      if (response.status !== 201) {
-        toast({
-          position: "top",
-          title: "Opa! Parece que algo deu errado.",
-          description:
-            "Ocorreu um problema ao definir o dispositivo atual. Tente novamente.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao definir o dispositivo atual. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const sendAuthorizationCode = async (code: string) => {
-    try {
-      const response = await apiCommonInstance.post("/auth/api", {
-        code: code,
-      });
-
-      if (response.status === 200) {
-        toast({
-          position: "top",
-          title: "Conta Spotify vinculada com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-
-      if (response.status !== 200) {
-        toast({
-          position: "top",
-          title: "Opa! Parece que algo deu errado.",
-          description:
-            "Ocorreu um problema ao vincular com o Spotify. Tente novamente.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao vincular com o Spotify. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const createPlaylist = async () => {
-    try {
-      const response = await apiCommonInstance.post("/establishment/playlist");
-
-      if (response.status === 200) {
-        toast({
-          position: "top",
-          title: "Playlist criada com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-
-      if (response.status !== 200) {
-        toast({
-          position: "top",
-          title: "Opa! Parece que algo deu errado.",
-          description:
-            "Ocorreu um problema ao criar a playlist. Tente novamente.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao criar a playlist. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  if (Object.keys(owner).length && !owner.hasThirdPartyAccess) {
-    if (code !== null) {
-      sendAuthorizationCode(code);
     }
   }
 
-  useEffect(() => {
-    getOwner();
-    getEstablishment();
-    getAvailableDevices();
-  }, []);
-
   return (
     <>
-      {!owner.hasThirdPartyAccess && (
+      {!data?.data.hasThirdPartyAccess && (
         <div className="mb-5">
           <Alert className="rounded-lg" status="warning">
             <AlertIcon />
@@ -222,46 +53,32 @@ const Home = () => {
       )}
 
       <div className="flex justify-between items-center mb-5">
-        <p className="font-bold">{owner.name}</p>
-        <DrawerAccount owner={owner} />
+        {isLoading && <div>Carregando...</div>}
+        {!isLoading && !isError && (
+          <>
+            <p className="font-bold">{data?.data.name}</p>
+            <DrawerAccount owner={data?.data} />
+          </>
+        )}
       </div>
 
       <div className="mb-5">
-        <CardEstablishment establishment={establishment} />
+        <CardEstablishment />
       </div>
+
+      {/* <div className="mb-5">
+        <CardDevices />
+      </div> */}
 
       <div className="mb-5">
-        <Select
-          placeholder="Selecione um dispositivo"
-          onChange={(e) => {
-            if (e.target.value.length > 0) setMainDevice(e.target.value);
-          }}
-        >
-          {availableDevices?.devices.map((device) => (
-            <option value={device.id}>{device.name}</option>
-          ))}
-        </Select>
+        <CardPlaylist />
       </div>
 
-      {establishment.playlist && (
-        <div className="mb-5">
-          <CardPlaylist playlist={establishment.playlist} />
-        </div>
-      )}
-
-      {!establishment.playlist && owner.hasThirdPartyAccess && (
-        <div className="flex justify-center mb-5">
-          <Button rightIcon={<Plus size={20} />} onClick={createPlaylist}>
-            Criar playlist
-          </Button>
-        </div>
-      )}
-
-      {!owner.hasThirdPartyAccess && (
+      {!isLoading && !isError && !data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
-          isOpen={isOpenDrawerAlert}
-          setIsOpen={setIsOpenDrawerAlert}
-          ownerName={owner.name}
+          isOpen={isOpen}
+          onClose={onClose}
+          ownerName={data?.data.name}
         />
       )}
     </>

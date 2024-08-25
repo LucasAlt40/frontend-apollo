@@ -2,7 +2,7 @@ import { Button, FormControl, Input, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { ArrowRight, Headphones } from "react-feather";
 import { UserType } from "../../@types/UserType";
-import { getInfo } from "../../api/services/EstablishmentService";
+import { getEstablishmentById } from "../../api/services/EstablishmentService";
 import { useQuery } from "@tanstack/react-query";
 
 interface UserLoginProps {
@@ -20,7 +20,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
   const { data, refetch } = useQuery({
     queryKey: ["establishmentUserInfo", formData.establishmentId],
     refetchOnWindowFocus: false,
-    queryFn: async () => await getInfo(formData.establishmentId),
+    queryFn: async () => await getEstablishmentById(formData.establishmentId),
     enabled: false,
   });
 

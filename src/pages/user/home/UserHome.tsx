@@ -5,7 +5,7 @@ import { MapPin, Users } from "react-feather";
 import { UserType } from "../../../@types/UserType";
 import { Skeleton, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { getInfo } from "../../../api/services/EstablishmentService";
+import { getEstablishmentById } from "../../../api/services/EstablishmentService";
 
 const UserHome = () => {
   const [user] = useState<UserType>(mapTokenToUser(getDecodedAccessToken()));
@@ -13,7 +13,7 @@ const UserHome = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["establishmentUserInfo", user.establishmentId],
     refetchOnWindowFocus: false,
-    queryFn: () => getInfo(user.establishmentId),
+    queryFn: () => getEstablishmentById(user.establishmentId),
   });
 
   return (

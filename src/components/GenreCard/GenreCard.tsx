@@ -2,7 +2,7 @@ import { useState } from "react";
 
 interface GenreCardProp {
   name: string;
-  votes: number;
+  votes: any;
   totalVotes: number;
   handleSelect: (genre: string) => void;
   disabled: boolean;

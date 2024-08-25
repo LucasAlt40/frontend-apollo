@@ -1,22 +1,50 @@
-import { PlaylistType } from "../../@types/PlaylistType";
-import { Settings } from "react-feather";
+import { useQuery } from "@tanstack/react-query";
+import {
+  createEstablishmentPlaylist,
+  getEstablishmentPlaylist,
+} from "../../../../api/services/EstablishmentService";
+import { Plus, Settings } from "react-feather";
 import defaultImage from "../../../../assets/images/default.jpg";
+import { Button } from "@chakra-ui/react";
 
-type Props = {
-  playlist: PlaylistType;
-};
+const CardPlaylist = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["establishmentPlaylist"],
+    refetchOnWindowFocus: false,
+    queryFn: () => getEstablishmentPlaylist(),
+  });
 
-const CardPlaylist = ({ playlist }: Props) => {
+  if (isLoading) return <div>Carregando...</div>;
+
+  if (isError) return <div>Não foi possível carregar este componente.</div>;
+
+  if (!data?.data.hasThirdPartyAccess) return <div>Sem acesso</div>;
+
+  if (data?.data === undefined) {
+    return (
+      <Button
+        rightIcon={<Plus size={20} />}
+        onClick={createEstablishmentPlaylist}
+      >
+        Criar playlist
+      </Button>
+    );
+  }
+
   return (
     <div className="w-full bg-[#f1f1f1] rounded-lg p-4">
       <img
         className="rounded-lg"
-        src={playlist.images !== null ? playlist.images[0].url : defaultImage}
+        src={
+          data?.data.images !== undefined
+            ? data?.data.images[0].url
+            : defaultImage
+        }
         alt="Imagem da Playlist"
       />
       <div className="my-5">
-        <p className="text-2xl font-bold">{playlist.name}</p>
-        <p>{playlist.description}</p>
+        <p className="text-2xl font-bold">{data?.data.name}</p>
+        <p>{data?.data.description}</p>
       </div>
       <div className="w-full flex justify-end">
         <a

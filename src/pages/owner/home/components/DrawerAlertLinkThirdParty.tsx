@@ -8,23 +8,18 @@ import {
   DrawerCloseButton,
   Button,
 } from "@chakra-ui/react";
-import { Dispatch, SetStateAction } from "react";
 import { Link } from "react-feather";
 
 type Props = {
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void;
   ownerName: string;
 };
 
-const DrawerAlertLinkThirdParty = ({ isOpen, setIsOpen, ownerName }: Props) => {
+const DrawerAlertLinkThirdParty = ({ isOpen, onClose, ownerName }: Props) => {
   return (
     <>
-      <Drawer
-        isOpen={isOpen}
-        placement="bottom"
-        onClose={() => setIsOpen(false)}
-      >
+      <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent maxH="80dvh" className="rounded-t-3xl">
           <DrawerCloseButton />
@@ -50,7 +45,7 @@ const DrawerAlertLinkThirdParty = ({ isOpen, setIsOpen, ownerName }: Props) => {
                 className="w-full mb-2"
                 variant="outline"
                 mr={3}
-                onClick={() => setIsOpen(false)}
+                onClick={onClose}
               >
                 Fechar
               </Button>
