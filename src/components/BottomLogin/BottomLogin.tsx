@@ -1,5 +1,9 @@
 import { useState, useEffect, ReactNode } from "react";
-import { Button, useDisclosure } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import apiCommonInstance from "../../api/apiCommonInstance";
+import Cookies from "js-cookie";
+
+import { Button, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Shield, User } from "react-feather";
 
 import style from "./index.module.css";
@@ -10,6 +14,8 @@ import { UserType } from "../@types/UserType";
 
 const BottomLogin = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const [step, setStep] = useState(0);
   const [isOwner, setIsOwner] = useState(false);
@@ -40,8 +46,32 @@ const BottomLogin = () => {
     onClose();
   };
 
-  const handleSubmit = () => {
-    console.log(user);
+  const handleSubmit = async () => {
+    if (user.establishmentId && user.genres.length > 0 && user.username) {
+      const response = await apiCommonInstance.post("/auth/user", user);
+      if (response.data) {
+        Cookies.set("user", JSON.stringify(user), {
+          expires: 2 / 24,
+        });
+        navigate("user/home");
+      } else {
+        toast({
+          title: "Erro",
+          description: "Algo deu errado ao tentar entrar no estabelecimento.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } else {
+      toast({
+        title: "Erro",
+        description: "Por favor, preencha todos os campos antes de prosseguir.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   const renderStepContent = (): ReactNode => {

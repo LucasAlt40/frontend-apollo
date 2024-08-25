@@ -1,14 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import "./index.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/login/Login.tsx";
-import { ChakraProvider } from "@chakra-ui/react";
 import OwnerLayout from "./layouts/OwnerLayout.tsx";
 import Home from "./pages/owner/home/Home.tsx";
 import Playlist from "./pages/owner/playlist/Playlist.tsx";
 import Player from "./pages/owner/player/Player.tsx";
+import UserLayout from "./layouts/UserLayout.tsx";
+import UserHome from "./pages/user/home/UserHome.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +33,16 @@ const router = createBrowserRouter([
       {
         path: "player",
         element: <Player />,
+      },
+    ],
+  },
+  {
+    path: "/user",
+    element: <UserLayout />,
+    children: [
+      {
+        path: "home",
+        element: <UserHome />,
       },
     ],
   },
