@@ -107,11 +107,13 @@ const BottomLogin = () => {
       case 2:
         return (
           <DrawerGenres
+            drawerTitle="Selecione até 3 gêneros"
             setGenres={setGenres}
             establishmentId={user.establishmentId}
             isOpen={isOpen}
             onClose={handleDrawerClose}
             handleSubmit={handleSubmit}
+            genreLimit={3}
           />
         );
       default:

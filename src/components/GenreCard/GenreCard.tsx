@@ -6,6 +6,7 @@ interface GenreCardProp {
   totalVotes: number;
   handleSelect: (genre: string) => void;
   disabled: boolean;
+  initiallySelected?: boolean;
 }
 
 const GenreCard = ({
@@ -14,8 +15,9 @@ const GenreCard = ({
   totalVotes,
   handleSelect,
   disabled,
+  initiallySelected = false,
 }: GenreCardProp) => {
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(initiallySelected);
   const percentVotes = totalVotes > 0 ? (votes / totalVotes) * 100 : 0;
 
   const handleClick = () => {
