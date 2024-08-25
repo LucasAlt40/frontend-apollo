@@ -14,6 +14,7 @@ import CardDevices from "./components/CardDevices";
 import { useQuery } from "@tanstack/react-query";
 import { getOwner } from "../../../api/services/OwnerService";
 import { sendAuthorizationCode } from "../../../api/services/AuthService";
+import { useState } from "react";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,15 +25,19 @@ const Home = () => {
     queryFn: () => getOwner(),
   });
 
+  const [isAlertOpened, setIsAlertOpened] = useState(false);
+
   if (!isLoading && !isError) {
     if (!data?.data.hasThirdPartyAccess) {
-      // When owner tries to link with Spotify
       const code = searchParams.get("code");
 
       if (code !== null) {
         sendAuthorizationCode(code);
         searchParams.delete("code");
         setSearchParams(searchParams);
+      } else if (!isAlertOpened) {
+        onOpen();
+        setIsAlertOpened(true); 
       }
     }
   }
