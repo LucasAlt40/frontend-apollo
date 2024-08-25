@@ -2,21 +2,16 @@ import { Button, FormControl, Input, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import apiCommonInstance from "../../api/apiCommonInstance";
 import { ArrowRight, Headphones } from "react-feather";
+import { UserType } from "../@types/UserType";
 
 interface UserLoginProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  setUser: React.Dispatch<
-    React.SetStateAction<any> //eslint-disable-line
-  >;
+  setUser: React.Dispatch<React.SetStateAction<UserType>>;
 }
 
 const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
   const toast = useToast();
-
-  const [formData, setFormData] = useState<{
-    establishmentId: string;
-    username: string;
-  }>({
+  const [formData, setFormData] = useState({
     establishmentId: "",
     username: "",
   });
@@ -28,8 +23,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
       ...prevData,
       [name]: value,
     }));
-
-    setUser((prevData: any) => ({ //eslint-disable-line
+    setUser((prevData: UserType) => ({
       ...prevData,
       [name]: value,
     }));
@@ -41,7 +35,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
         `/establishment/${formData.establishmentId}`
       );
 
-      if (!response.data.isTurnOff) {
+      if (!response.data.isOff) {
         setShowUsername(true);
       } else {
         showToast(
@@ -72,7 +66,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
 
   return (
     <FormControl className="flex flex-col">
-      {!showUsername && (
+      {!showUsername ? (
         <>
           <Input
             className="mb-4"
@@ -94,8 +88,7 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
             Acessar
           </Button>
         </>
-      )}
-      {showUsername && (
+      ) : (
         <>
           <Input
             className="mb-4"

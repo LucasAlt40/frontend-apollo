@@ -1,42 +1,51 @@
-import { useState, ReactNode } from "react";
-import { Button } from "@chakra-ui/react";
+import { useState, useEffect, ReactNode } from "react";
+import { Button, useDisclosure } from "@chakra-ui/react";
 import { ArrowLeft, Shield, User } from "react-feather";
 
 import style from "./index.module.css";
 import OwnerLogin from "../OwnerLogin/OwnerLogin";
 import UserLogin from "../UserLogin/UserLogin";
-
-interface User {
-  establishmentId: string;
-  username: string;
-  genres: string;
-}
+import DrawerGenres from "../DrawerGenres/DrawerGenres";
+import { UserType } from "../@types/UserType";
 
 const BottomLogin = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [step, setStep] = useState(0);
   const [isOwner, setIsOwner] = useState(false);
-  const [user, setUser] = useState<User>({
+  const [genres, setGenres] = useState<string[]>([]);
+  const [user, setUser] = useState<UserType>({
     establishmentId: "",
     username: "",
-    genres: "",
+    genres: [],
   });
 
-  const handleBack = () => {
-    if (step > 0) {
-      setStep(step - 1);
+  useEffect(() => {
+    if (step === 2) {
+      onOpen();
     }
-    if (step <= 1) {
-      setIsOwner(false);
-    }
-  };
+  }, [step, onOpen]);
+
+  useEffect(() => {
+    setUser((prevData) => ({ ...prevData, genres }));
+  }, [genres]);
 
   const handleStepChange = (newStep: number, ownerStatus: boolean) => {
     setIsOwner(ownerStatus);
     setStep(newStep);
   };
 
-  const renderStepContent = (currentStep: number): ReactNode => {
-    switch (currentStep) {
+  const handleDrawerClose = () => {
+    if (step > 0) setStep(step - 1);
+    onClose();
+  };
+
+  const handleSubmit = () => {
+    console.log(user);
+  };
+
+  const renderStepContent = (): ReactNode => {
+    switch (step) {
       case 0:
         return (
           <>
@@ -49,11 +58,10 @@ const BottomLogin = () => {
             >
               Proprietário
             </Button>
-
             <Button
-              className="m-4"
               colorScheme="red"
               rightIcon={<User />}
+              className="m-4"
               onClick={() => handleStepChange(1, false)}
             >
               Usuário
@@ -67,15 +75,29 @@ const BottomLogin = () => {
           <UserLogin setStep={setStep} setUser={setUser} />
         );
       case 2:
-        return <div></div>;
+        return (
+          <DrawerGenres
+            setGenres={setGenres}
+            establishmentId={user.establishmentId}
+            isOpen={isOpen}
+            onClose={handleDrawerClose}
+            handleSubmit={handleSubmit}
+          />
+        );
       default:
         return null;
     }
   };
 
   const getStepTitle = (): string => {
-    if (step === 1) return isOwner ? "Proprietário" : "Estabelecimento";
-    return "Quem é você?";
+    switch (step) {
+      case 1:
+        return isOwner ? "Proprietário" : "Estabelecimento";
+      case 2:
+        return "Escolher Gêneros";
+      default:
+        return "Quem é você?";
+    }
   };
 
   return (
@@ -84,12 +106,12 @@ const BottomLogin = () => {
         <ArrowLeft
           size={32}
           className="absolute top-0 ml-4 mt-4 self-start"
-          onClick={handleBack}
+          onClick={() => step > 0 && setStep(step - 1)}
         />
       )}
       <p className="mb-4">{getStepTitle()}</p>
       <div className="flex flex-col justify-between items-center">
-        {renderStepContent(step)}
+        {renderStepContent()}
       </div>
     </div>
   );
