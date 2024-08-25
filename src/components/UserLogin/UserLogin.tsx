@@ -1,8 +1,9 @@
 import { Button, FormControl, Input, useToast } from "@chakra-ui/react";
 import { useState } from "react";
-import apiCommonInstance from "../../api/apiCommonInstance";
 import { ArrowRight, Headphones } from "react-feather";
-import { UserType } from "../@types/UserType";
+import { UserType } from "../../@types/UserType";
+import { getInfo } from "../../api/services/EstablishmentService";
+import { useQuery } from "@tanstack/react-query";
 
 interface UserLoginProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -16,6 +17,12 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
     username: "",
   });
   const [showUsername, setShowUsername] = useState(false);
+  const { data, refetch } = useQuery({
+    queryKey: ["establishmentUserInfo", formData.establishmentId],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await getInfo(formData.establishmentId),
+    enabled: false,
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,24 +37,14 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
   };
 
   const handleSearchEstablishment = async () => {
-    try {
-      const response = await apiCommonInstance.get(
-        `/establishment/${formData.establishmentId}`
-      );
+    await refetch();
 
-      if (!response.data.isOff) {
-        setShowUsername(true);
-      } else {
-        showToast(
-          "Opa! Parece que algo deu errado.",
-          "O estabelecimento que você está tentando acessar não está em funcionamento no momento.",
-          "error"
-        );
-      }
-    } catch {
+    if (data && !data?.data.isOff) {
+      setShowUsername(true);
+    } else {
       showToast(
         "Opa! Parece que algo deu errado.",
-        "O estabelecimento que você está tentando acessar não existe ou não está em funcionamento no momento.",
+        "O estabelecimento que você está tentando acessar não está em funcionamento no momento.",
         "error"
       );
     }

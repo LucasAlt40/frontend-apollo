@@ -1,7 +1,6 @@
 import DrawerAccount from "./components/DrawerAccount";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import apiCommonInstance from "../../../api/apiCommonInstance";
 import {
   Alert,
   AlertDescription,
@@ -18,6 +17,7 @@ import CardPlaylist from "./components/CardPlaylist";
 import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
 import { OwnerType } from "../../../@types/OwnerType";
 import { AvailableDevicesType } from "../@types/DevicesType";
+import apiCommonInstance from "../../../api/config/apiCommonInstance";
 
 const Home = () => {
   const toast = useToast();

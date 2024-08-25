@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import { Trash } from "react-feather";
-import apiCommonInstance from "../../../../api/apiCommonInstance";
+import apiCommonInstance from "../../../../api/config/apiCommonInstance";
 
 type Props = {
   genre: string;
@@ -21,7 +21,7 @@ const BlockedGenre = ({ genre }: Props) => {
       if (response.status === 200) {
         toast({
           position: "top",
-          title: "Genêro desbloqueado com sucesso!",
+          title: "Gênero desbloqueado com sucesso!",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -33,7 +33,7 @@ const BlockedGenre = ({ genre }: Props) => {
         position: "top",
         title: "Opa! Parece que algo deu errado.",
         description:
-          "Ocorreu um problema ao desbloquear o genêro da playlist. Tente novamente.",
+          "Ocorreu um problema ao desbloquear o Gênero da playlist. Tente novamente.",
         status: "error",
         duration: 5000,
         isClosable: true,

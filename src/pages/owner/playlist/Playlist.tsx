@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { PlaylistType } from "../@types/PlaylistType";
-import apiCommonInstance from "../../../api/apiCommonInstance";
 import defaultImage from "../../../assets/images/default.jpg";
 import { useToast } from "@chakra-ui/react";
 import BlockedGenre from "./components/BlockedGenre";
@@ -8,6 +7,7 @@ import SimpleCard from "../../../components/SimpleCard/SimpleCard";
 import DrawerGenres from "../../../components/DrawerGenres/DrawerGenres";
 import { useDisclosure } from "@chakra-ui/react";
 import { Edit, PlusCircle } from "react-feather";
+import apiCommonInstance from "../../../api/config/apiCommonInstance";
 
 const Playlist = () => {
   const toast = useToast();
@@ -41,7 +41,7 @@ const Playlist = () => {
       if (response.status === 201) {
         toast({
           position: "top",
-          title: "Genêros iniciais definidos com sucesso!",
+          title: "Gêneros iniciais definidos com sucesso!",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -54,7 +54,7 @@ const Playlist = () => {
         position: "top",
         title: "Opa! Parece que algo deu errado.",
         description:
-          "Ocorreu um problema ao definir os genêros iniciais da playlist. Tente novamente.",
+          "Ocorreu um problema ao definir os Gêneros iniciais da playlist. Tente novamente.",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -74,7 +74,7 @@ const Playlist = () => {
       if (response.status === 200) {
         toast({
           position: "top",
-          title: "Genêros bloqueados com sucesso!",
+          title: "Gêneros bloqueados com sucesso!",
           status: "success",
           duration: 5000,
           isClosable: true,
@@ -87,7 +87,7 @@ const Playlist = () => {
         position: "top",
         title: "Opa! Parece que algo deu errado.",
         description:
-          "Ocorreu um problema ao bloquear os genêros da playlist. Tente novamente.",
+          "Ocorreu um problema ao bloquear os Gêneros da playlist. Tente novamente.",
         status: "error",
         duration: 5000,
         isClosable: true,

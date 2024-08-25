@@ -9,9 +9,9 @@ import {
 import { ArrowRight, Eye, EyeOff } from "react-feather";
 
 import Cookies from "js-cookie";
-import apiCommonInstance from "../../api/apiCommonInstance";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiCommonInstance from "../../api/config/apiCommonInstance";
 
 const OwnerLogin = () => {
   const toast = useToast();
@@ -68,7 +68,7 @@ const OwnerLogin = () => {
     <>
       <FormControl className="flex flex-col">
         <Input
-          className="mb-4"
+          className="mb-4 focus:shadow-none"
           color="var(--color-rose)"
           borderColor="var(--color-rose)"
           type="text"

@@ -1,7 +1,7 @@
-import apiCommonInstance from "../../../../api/apiCommonInstance";
 import { Power } from "react-feather";
 import { Button, useToast } from "@chakra-ui/react";
 import { EstablishmentType } from "../../@types/EstablishmentType";
+import apiCommonInstance from "../../../../api/config/apiCommonInstance";
 
 type Props = {
   establishment: EstablishmentType;

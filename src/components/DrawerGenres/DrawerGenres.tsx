@@ -12,10 +12,10 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { Check, Search } from "react-feather";
-import { useEffect, useState } from "react";
-import { GenresAvailableType } from "./@types/GenresAvailableType";
+import { useState } from "react";
 import GenreCard from "../GenreCard/GenreCard";
-import apiCommonInstance from "../../api/apiCommonInstance";
+import { useQuery } from "@tanstack/react-query";
+import { getEstablishmentGenres } from "../../api/services/EstablishmentService";
 
 type Props = {
   establishmentId: string;
@@ -38,26 +38,15 @@ const DrawerGenres = ({
   genreLimit = 3,
   drawerTitle = "Selecionar Gêneros",
 }: Props) => {
-  const [genres, setAvailableGenres] = useState<GenresAvailableType>();
   const [selectedGenres, setSelectedGenres] =
     useState<string[]>(preSelectedGenres);
   const [searchTerm, setSearchTerm] = useState("");
 
-  useEffect(() => {
-    if (isOpen) {
-      const fetchGenres = async () => {
-        try {
-          const response = await apiCommonInstance.get(
-            `/establishment/playlist/genres/${establishmentId}`
-          );
-          setAvailableGenres(response.data);
-        } catch (error) {
-          console.error("Failed to fetch genres", error);
-        }
-      };
-      fetchGenres();
-    }
-  }, [establishmentId, isOpen]);
+  const { data } = useQuery({
+    queryKey: ["establishmentGenres", establishmentId],
+    refetchOnWindowFocus: false,
+    queryFn: () => getEstablishmentGenres(establishmentId),
+  });
 
   const handleSelect = (genre: string) => {
     if (selectedGenres.includes(genre)) {
@@ -77,8 +66,8 @@ const DrawerGenres = ({
     setSearchTerm(event.target.value);
   };
 
-  const filteredGenres = genres
-    ? Object.entries(genres.genresAvailable).filter(([genre]) =>
+  const filteredGenres = data?.data.genresAvailable
+    ? Object.entries(data?.data.genresAvailable).filter(([genre]) =>
         genre.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : [];
@@ -113,7 +102,7 @@ const DrawerGenres = ({
                 key={genre}
                 name={genre}
                 votes={votes}
-                totalVotes={genres?.totalVotes || 0}
+                totalVotes={data?.data?.totalVotes || 0}
                 handleSelect={handleSelect}
                 disabled={
                   selectedGenres.length >= genreLimit &&

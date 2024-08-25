@@ -1,6 +1,5 @@
 import { useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import apiCommonInstance from "../../api/apiCommonInstance";
 import Cookies from "js-cookie";
 
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
@@ -11,6 +10,7 @@ import OwnerLogin from "../OwnerLogin/OwnerLogin";
 import UserLogin from "../UserLogin/UserLogin";
 import DrawerGenres from "../DrawerGenres/DrawerGenres";
 import { UserType } from "../../@types/UserType";
+import apiCommonInstance from "../../api/config/apiCommonInstance";
 
 const BottomLogin = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

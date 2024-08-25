@@ -9,9 +9,9 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { Link, LogOut, Trash, User } from "react-feather";
-import { OwnerType } from "../../@types/OwnerType";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { OwnerType } from "../../../../@types/OwnerType";
 
 type Props = {
   owner: OwnerType;
@@ -59,12 +59,15 @@ const DrawerAccount = ({ owner }: Props) => {
               )}
             </div>
             <div className="mb-5">
-              <button
-                className="w-full flex justify-between underline text-primary py-2"
+              <Button
+                className="w-full flex items-center "
+                colorScheme="red"
+                variant="link"
+                rightIcon={<LogOut />}
                 onClick={onLogoutOwner}
               >
-                Sair <LogOut />
-              </button>
+                <p className="underline w-full text-start ">Sair</p>
+              </Button>
             </div>
           </DrawerBody>
 
