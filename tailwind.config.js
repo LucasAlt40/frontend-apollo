@@ -15,6 +15,7 @@ export default {
       bubbleGum: "#ff77e9",
       bermuda: "#78dcca",
       muted: "#78716C",
+      tinnyGray: "#f1f1f1",
     },
     extend: {},
   },

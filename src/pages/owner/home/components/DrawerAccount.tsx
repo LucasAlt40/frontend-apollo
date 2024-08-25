@@ -59,9 +59,12 @@ const DrawerAccount = ({ owner }: Props) => {
               )}
             </div>
             <div className="mb-5">
-              <Button onClick={onLogoutOwner}>
+              <button
+                className="w-full flex justify-between underline text-primary py-2"
+                onClick={onLogoutOwner}
+              >
                 Sair <LogOut />
-              </Button>
+              </button>
             </div>
           </DrawerBody>
 

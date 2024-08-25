@@ -2,12 +2,20 @@ import DrawerAccount from "./components/DrawerAccount";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import apiCommonInstance from "../../../api/apiCommonInstance";
-import { Button, useToast } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Button,
+  useToast,
+} from "@chakra-ui/react";
 import { CardEstablishment } from "./components/CardEstablishment";
 import { OwnerType } from "../@types/OwnerType";
 import { EstablishmentType } from "../@types/EstablishmentType";
 import { Plus } from "react-feather";
 import CardPlaylist from "./components/CardPlaylist";
+import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
 
 const Home = () => {
   const toast = useToast();
@@ -17,7 +25,9 @@ const Home = () => {
     {} as EstablishmentType
   );
 
-  // Only exist this var ff the owner tries to link with Spotify
+  const [isOpenDrawerAlert, setIsOpenDrawerAlert] = useState(true);
+
+  // When owner tries to link with Spotify
   const code = searchParams.get("code");
 
   const getOwner = async () => {
@@ -139,6 +149,19 @@ const Home = () => {
 
   return (
     <>
+      {!owner.hasThirdPartyAccess && (
+        <div className="mb-5">
+          <Alert className="rounded-lg" status="warning">
+            <AlertIcon />
+            <AlertTitle>Atenção</AlertTitle>
+            <AlertDescription>
+              Sua conta não possui vinculo com spotify, você não conseguirá
+              fazer uso da ferramenta.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
+
       <div className="flex justify-between items-center mb-5">
         <p className="font-bold">{owner.name}</p>
         <DrawerAccount owner={owner} />
@@ -148,15 +171,27 @@ const Home = () => {
         <CardEstablishment establishment={establishment} />
       </div>
 
-      <div className="mb-5">
-        {establishment.playlist ? (
+      {establishment.playlist && (
+        <div className="mb-5">
           <CardPlaylist playlist={establishment.playlist} />
-        ) : (
+        </div>
+      )}
+
+      {!establishment.playlist && owner.hasThirdPartyAccess && (
+        <div className="flex justify-center mb-5">
           <Button rightIcon={<Plus size={20} />} onClick={createPlaylist}>
             Criar playlist
           </Button>
-        )}
-      </div>
+        </div>
+      )}
+
+      {!owner.hasThirdPartyAccess && (
+        <DrawerAlertLinkThirdParty
+          isOpen={isOpenDrawerAlert}
+          setIsOpen={setIsOpenDrawerAlert}
+          ownerName={owner.name}
+        />
+      )}
     </>
   );
 };

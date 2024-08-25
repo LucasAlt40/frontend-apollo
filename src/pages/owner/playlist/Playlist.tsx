@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { PlaylistType } from "../@types/PlaylistType";
 import apiCommonInstance from "../../../api/apiCommonInstance";
 import defaultImage from "../../../assets/images/default.jpg";
-import { useToast } from "@chakra-ui/react";
+// import { useToast } from "@chakra-ui/react";
 import BlockedGenre from "./components/BlockedGenre";
-import DrawerGenres from "../../../components/DrawerGenres/DrawerGenres";
+import SimpleCard from "../../../components/SimpleCard/SimpleCard";
 
 const Playlist = () => {
-  const toast = useToast();
+  // const toast = useToast();
   const [playlist, setPlaylist] = useState<PlaylistType>({} as PlaylistType);
 
   const getPlaylist = async () => {
@@ -22,69 +22,37 @@ const Playlist = () => {
     }
   };
 
-  const blockGenres = async (genres: string[]) => {
-    try {
-      const response = await apiCommonInstance.put(
-        "/establishment/playlist/genres/block",
-        {
-          genres: genres,
-        }
-      );
+  // const blockGenres = async (genres: string[]) => {
+  //   try {
+  //     const response = await apiCommonInstance.put(
+  //       "/establishment/playlist/genres/block",
+  //       {
+  //         genres: genres,
+  //       }
+  //     );
 
-      if (response.status === 200) {
-        toast({
-          position: "top",
-          title: "Genêros bloqueados com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao bloquear os genêros da playlist. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const incrementGenresVote = async (genres: string[]) => {
-    try {
-      const response = await apiCommonInstance.post(
-        "/establishment/playlist/genres/increment",
-        {
-          genres: genres,
-        }
-      );
-
-      if (response.status === 201) {
-        toast({
-          position: "top",
-          title: "Genêros musicais atualizados com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao atualizar os genêros da playlist. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  //     if (response.status === 200) {
+  //       toast({
+  //         position: "top",
+  //         title: "Genêros bloqueados com sucesso!",
+  //         status: "success",
+  //         duration: 5000,
+  //         isClosable: true,
+  //       });
+  //       return;
+  //     }
+  //   } catch {
+  //     toast({
+  //       position: "top",
+  //       title: "Opa! Parece que algo deu errado.",
+  //       description:
+  //         "Ocorreu um problema ao bloquear os genêros da playlist. Tente novamente.",
+  //       status: "error",
+  //       duration: 5000,
+  //       isClosable: true,
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     getPlaylist();
@@ -104,28 +72,24 @@ const Playlist = () => {
         </div>
       </div>
 
-      <div className="w-full bg-[#f1f1f1] rounded-lg p-4 mb-5">
-        <div>
-          <p className="text-lg font-bold">Gêneros bloqueados</p>
-          <span>Bloqueie gêneros para evitar musicas indesejadas.</span>
-        </div>
+      <SimpleCard
+        title="Gêneros bloqueados"
+        description="Bloqueie gêneros para evitar musicas indesejadas."
+      >
         <div className="flex flex-wrap gap-2">
           {playlist?.blockedGenres?.length > 0 &&
             playlist.blockedGenres.map((genre) => (
-              <BlockedGenre genre={genre} />
+              <BlockedGenre key={genre} genre={genre} />
             ))}
-          <DrawerGenres genres={playlist.genres} />
         </div>
-      </div>
+      </SimpleCard>
 
-      <div className="w-full bg-[#f1f1f1] rounded-lg p-4 mb-5">
-        <div>
-          <p className="text-lg font-bold">Gêneros da playlist</p>
-          <span>
-            Defina seu gosto, escolha até 3 gêneros para iniciar a playlist
-          </span>
-        </div>
-      </div>
+      <SimpleCard
+        title="Gêneros da playlist"
+        description="Defina seu gosto, escolha até 3 gêneros para iniciar a playlist"
+      >
+        :)
+      </SimpleCard>
     </>
   );
 };
