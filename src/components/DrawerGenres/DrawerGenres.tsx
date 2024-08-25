@@ -23,6 +23,9 @@ type Props = {
   onClose: () => void;
   setGenres: React.Dispatch<React.SetStateAction<string[]>>;
   handleSubmit: () => void;
+  preSelectedGenres?: string[];
+  genreLimit?: number;
+  drawerTitle?: string;
 };
 
 const DrawerGenres = ({
@@ -31,9 +34,13 @@ const DrawerGenres = ({
   onClose,
   setGenres,
   handleSubmit,
+  preSelectedGenres = [],
+  genreLimit = 3,
+  drawerTitle = "Selecionar Gêneros",
 }: Props) => {
   const [genres, setAvailableGenres] = useState<GenresAvailableType>();
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] =
+    useState<string[]>(preSelectedGenres);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -58,7 +65,7 @@ const DrawerGenres = ({
       setSelectedGenres(newSelectedGenres);
       setGenres(newSelectedGenres);
     } else {
-      if (selectedGenres.length < 3) {
+      if (selectedGenres.length < genreLimit) {
         const newSelectedGenres = [...selectedGenres, genre];
         setSelectedGenres(newSelectedGenres);
         setGenres(newSelectedGenres);
@@ -81,8 +88,7 @@ const DrawerGenres = ({
       <DrawerOverlay />
       <DrawerContent maxH="80dvh" className="rounded-t-3xl">
         <DrawerCloseButton />
-        <DrawerHeader>Escolher Gêneros</DrawerHeader>
-
+        <DrawerHeader>{drawerTitle}</DrawerHeader>
         <DrawerBody>
           <div className="w-full sticky top-0 z-10 bg-white">
             <InputGroup size="md" className="mb-4">
@@ -110,13 +116,14 @@ const DrawerGenres = ({
                 totalVotes={genres?.totalVotes || 0}
                 handleSelect={handleSelect}
                 disabled={
-                  selectedGenres.length >= 3 && !selectedGenres.includes(genre)
+                  selectedGenres.length >= genreLimit &&
+                  !selectedGenres.includes(genre)
                 }
+                initiallySelected={selectedGenres.includes(genre)}
               />
             ))}
           </div>
         </DrawerBody>
-
         <DrawerFooter>
           <Button
             className="w-full"
