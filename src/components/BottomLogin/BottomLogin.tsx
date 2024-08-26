@@ -1,15 +1,14 @@
 import { useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Shield, User } from "react-feather";
 import { UserType } from "../../@types/UserType";
-
 import OwnerLogin from "../OwnerLogin/OwnerLogin";
 import UserLogin from "../UserLogin/UserLogin";
 import DrawerGenres from "../DrawerGenres/DrawerGenres";
 import { LoginUser } from "../../api/services/AuthService";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const BottomLogin = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,17 +24,7 @@ const BottomLogin = () => {
     genres: [],
   });
 
-  useEffect(() => {
-    if (step === 2) {
-      onOpen();
-    }
-  }, [step, onOpen]);
-
-  useEffect(() => {
-    setUser((prevData) => ({ ...prevData, genres }));
-  }, [genres]);
-
-  const { mutate, isSuccess, isError, data } = LoginUser();
+  const { mutate, isSuccess, isError, isPending, data } = LoginUser(); // Adicione isLoading
 
   const handleStepChange = (newStep: number, ownerStatus: boolean) => {
     setIsOwner(ownerStatus);
@@ -60,26 +49,6 @@ const BottomLogin = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      Cookies.set("accessToken", data?.data.accessToken, {
-        expires: 2 / 24,
-      });
-      onClose();
-      navigate("user/home");
-    }
-
-    if (isError) {
-      toast({
-        title: "Erro",
-        description: "Algo deu errado ao tentar entrar no estabelecimento.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  }, [isSuccess, isError]); //eslint-disable-line
 
   const renderStepContent = (): ReactNode => {
     switch (step) {
@@ -145,6 +114,36 @@ const BottomLogin = () => {
     }
   };
 
+  useEffect(() => {
+    if (step === 2) {
+      onOpen();
+    }
+  }, [step, onOpen]);
+
+  useEffect(() => {
+    setUser((prevData) => ({ ...prevData, genres }));
+  }, [genres]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      Cookies.set("accessToken", data?.data.accessToken, {
+        expires: 2 / 24,
+      });
+      onClose();
+      navigate("user/home");
+    }
+
+    if (isError) {
+      toast({
+        title: "Erro",
+        description: "Algo deu errado ao tentar entrar no estabelecimento.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [isSuccess, isError]); //eslint-disable-line
+
   return (
     <div className="rounded-t-3xl w-full bg-white flex flex-col items-center relative">
       {step > 0 && (
@@ -158,7 +157,7 @@ const BottomLogin = () => {
         {getStepTitle()}
       </h2>
       <div className="w-full px-4 py-6 flex flex-col justify-between items-center">
-        {renderStepContent()}
+        {isPending ? <LoadingSpinner /> : renderStepContent()}
       </div>
     </div>
   );
