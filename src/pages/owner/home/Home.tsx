@@ -55,7 +55,7 @@ const Home = () => {
         )}
       </div>
 
-      <Establishment />
+      <Establishment owner={data?.data} />
 
       {!isLoading && !error && !data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
