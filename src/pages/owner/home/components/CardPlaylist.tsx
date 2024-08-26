@@ -18,7 +18,9 @@ const CardPlaylist = () => {
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
-  if (data?.data === undefined) {
+  console.log(data?.data);
+
+  if (data?.data === "") {
     return (
       <Button
         rightIcon={<Plus size={20} />}

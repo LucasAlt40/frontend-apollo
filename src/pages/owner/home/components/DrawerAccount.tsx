@@ -46,7 +46,7 @@ const DrawerAccount = ({ owner }: Props) => {
               {owner.hasThirdPartyAccess ? (
                 <a className="flex justify-between" href="">
                   Desvincular conta
-                  <Trash />
+                  <Trash size={16} />
                 </a>
               ) : (
                 <a
@@ -54,7 +54,7 @@ const DrawerAccount = ({ owner }: Props) => {
                   href={import.meta.env.VITE_THIRD_PARTY_AUTHORIZATION_URL}
                 >
                   Vincular uma conta Spotify
-                  <Link />
+                  <Link size={16} />
                 </a>
               )}
             </div>
@@ -63,7 +63,7 @@ const DrawerAccount = ({ owner }: Props) => {
                 className="w-full flex items-center "
                 colorScheme="red"
                 variant="link"
-                rightIcon={<LogOut />}
+                rightIcon={<LogOut size={16} />}
                 onClick={onLogoutOwner}
               >
                 <p className="underline w-full text-start ">Sair</p>

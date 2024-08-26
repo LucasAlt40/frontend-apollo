@@ -33,7 +33,7 @@ const DrawerAlertLinkThirdParty = ({ isOpen, onClose, ownerName }: Props) => {
               do Spotify para poder fornecer as músicas ao estabelecimento.
             </p>
             <p>
-              <a className="underline" href="#">
+              <a className="underline text-[#0D6EFD]" href="#">
                 Por que fazemos isso?
               </a>
             </p>
@@ -44,16 +44,17 @@ const DrawerAlertLinkThirdParty = ({ isOpen, onClose, ownerName }: Props) => {
               <Button
                 className="w-full mb-2"
                 variant="outline"
+                borderRadius="100"
                 mr={3}
                 onClick={onClose}
               >
                 Fechar
               </Button>
               <a
-                className="w-full  p-2 flex items-center justify-center rounded-full bg-primary text-white hover:opacity-90"
+                className="w-full  p-2 gap-4 flex items-center justify-center rounded-full bg-primary text-white hover:opacity-90"
                 href={import.meta.env.VITE_THIRD_PARTY_AUTHORIZATION_URL}
               >
-                Vincular <Link />
+                Vincular <Link size={16} />
               </a>
             </div>
           </DrawerFooter>

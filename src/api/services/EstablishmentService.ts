@@ -20,7 +20,7 @@ const getAvailableDevices = async () => {
 
 const setMainDevice = async (deviceId: string) => {
   return await apiCommonInstance.post(`${apiUrl}/devices`, {
-    deviceId,
+    id: deviceId,
   });
 };
 

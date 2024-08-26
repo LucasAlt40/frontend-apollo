@@ -1,26 +1,16 @@
 import DrawerAccount from "./components/DrawerAccount";
 import { useSearchParams } from "react-router-dom";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { CardEstablishment } from "./components/CardEstablishment";
-import CardPlaylist from "./components/CardPlaylist";
+import { Alert, AlertIcon, useDisclosure } from "@chakra-ui/react";
 import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
-import CardDevices from "./components/CardDevices";
 import { useQuery } from "@tanstack/react-query";
 import { getOwner } from "../../../api/services/OwnerService";
 import { sendAuthorizationCode } from "../../../api/services/AuthService";
 import { useState } from "react";
+import Establishment from "./components/Establishment";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { isPending, error, data } = useQuery({
     queryKey: ["owner"],
     refetchOnWindowFocus: false,
@@ -39,12 +29,10 @@ const Home = () => {
         setSearchParams(searchParams);
       } else if (!isAlertOpened) {
         onOpen();
-        setIsAlertOpened(true); 
+        setIsAlertOpened(true);
       }
     }
   }
-
-  console.log(data?.data);
 
   return (
     <>
@@ -52,11 +40,7 @@ const Home = () => {
         <div className="mb-5">
           <Alert className="rounded-lg" status="warning">
             <AlertIcon />
-            <AlertTitle>Atenção</AlertTitle>
-            <AlertDescription>
-              Sua conta não possui vinculo com spotify, você não conseguirá
-              fazer uso da ferramenta.
-            </AlertDescription>
+            Atenção! Sua conta não possui vinculo com spotify
           </Alert>
         </div>
       )}
@@ -71,21 +55,7 @@ const Home = () => {
         )}
       </div>
 
-      <div className="mb-5">
-        <CardEstablishment />
-      </div>
-
-      {data?.data.hasThirdPartyAccess && (
-        <>
-          <div className="mb-5">
-            <CardDevices />
-          </div>
-
-          <div className="mb-5">
-            <CardPlaylist />
-          </div>
-        </>
-      )}
+      <Establishment />
 
       {!isPending && !error && !data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
