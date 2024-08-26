@@ -2,7 +2,6 @@ import { Power } from "react-feather";
 import { Button } from "@chakra-ui/react";
 import {
   getEstablishment,
-  turnOffEstablishment,
   turnOnEstablishment,
 } from "../../../../api/services/EstablishmentService";
 import { useQuery } from "@tanstack/react-query";
