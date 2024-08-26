@@ -11,7 +11,7 @@ import Establishment from "./components/Establishment";
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isPending, error, data } = useQuery({
+  const { isLoading, error, data } = useQuery({
     queryKey: ["owner"],
     refetchOnWindowFocus: false,
     queryFn: () => getOwner(),
@@ -19,7 +19,7 @@ const Home = () => {
 
   const [isAlertOpened, setIsAlertOpened] = useState(false);
 
-  if (!isPending && !error) {
+  if (!isLoading && !error) {
     if (!data?.data.hasThirdPartyAccess) {
       const code = searchParams.get("code");
 
@@ -46,8 +46,8 @@ const Home = () => {
       )}
 
       <div className="flex justify-between items-center mb-5">
-        {isPending && <div>Carregando...</div>}
-        {!isPending && !error && (
+        {isLoading && <div>Carregando...</div>}
+        {!isLoading && !error && (
           <>
             <p className="font-bold">{data?.data.name}</p>
             <DrawerAccount owner={data?.data} />
@@ -57,7 +57,7 @@ const Home = () => {
 
       <Establishment />
 
-      {!isPending && !error && !data?.data.hasThirdPartyAccess && (
+      {!isLoading && !error && !data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
           isOpen={isOpen}
           onClose={onClose}

@@ -7,8 +7,9 @@ import {
   DrawerContent,
   Button,
   useDisclosure,
+  DrawerCloseButton,
 } from "@chakra-ui/react";
-import { Link, LogOut, Trash, User } from "react-feather";
+import { Link, LogOut, User } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { OwnerType } from "../../../../@types/OwnerType";
@@ -34,6 +35,7 @@ const DrawerAccount = ({ owner }: Props) => {
       <Drawer isOpen={isOpen} placement="bottom" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent className="rounded-t-3xl">
+          <DrawerCloseButton />
           <DrawerHeader>Perfil</DrawerHeader>
 
           <DrawerBody>
@@ -44,10 +46,7 @@ const DrawerAccount = ({ owner }: Props) => {
             <div className="mb-5">
               <p className="font-bold">Spotify</p>
               {owner.hasThirdPartyAccess ? (
-                <a className="flex justify-between" href="">
-                  Desvincular conta
-                  <Trash size={16} />
-                </a>
+                <p>Conta vinculada.</p>
               ) : (
                 <a
                   className="flex justify-between"
@@ -73,7 +72,7 @@ const DrawerAccount = ({ owner }: Props) => {
 
           <DrawerFooter>
             <div className="w-full flex flex-col">
-              <Button variant="outline" onClick={onClose}>
+              <Button borderRadius={100} variant="outline" onClick={onClose}>
                 Fechar
               </Button>
             </div>

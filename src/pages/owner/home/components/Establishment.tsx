@@ -23,7 +23,7 @@ const Establishment = () => {
       </div>
 
       <span className="text-muted font-medium">Dispositivos disponíveis</span>
-      <div className="mb-5 border p-4 rounded-lg">
+      <div className="mb-5 bg-tinnyGray p-4 rounded-lg">
         <RadioGroupDevices deviceId={data?.data.deviceId} />
       </div>
 
