@@ -18,6 +18,8 @@ export const CardEstablishment = () => {
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
+  console.log(data?.data);
+
   // if (!data?.data.isOff && data?.data.playlist.hasIncrementedGenre) {
   //   return (
   //     <div className="w-full flex justify-between items-center bg-primary rounded-md p-4">

@@ -18,8 +18,6 @@ const CardPlaylist = () => {
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
-  if (!data?.data.hasThirdPartyAccess) return <div>Sem acesso</div>;
-
   if (data?.data === undefined) {
     return (
       <Button

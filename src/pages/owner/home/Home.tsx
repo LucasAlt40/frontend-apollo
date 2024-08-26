@@ -17,14 +17,16 @@ import { sendAuthorizationCode } from "../../../api/services/AuthService";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data, isLoading, isError } = useQuery({
+
+  const { isPending, error, data } = useQuery({
     queryKey: ["owner"],
     refetchOnWindowFocus: false,
     queryFn: () => getOwner(),
   });
 
-  if (!isLoading && !isError) {
+  if (!isPending && !error) {
     if (!data?.data.hasThirdPartyAccess) {
       // When owner tries to link with Spotify
       const code = searchParams.get("code");
@@ -36,6 +38,8 @@ const Home = () => {
       }
     }
   }
+
+  console.log(data?.data);
 
   return (
     <>
@@ -53,8 +57,8 @@ const Home = () => {
       )}
 
       <div className="flex justify-between items-center mb-5">
-        {isLoading && <div>Carregando...</div>}
-        {!isLoading && !isError && (
+        {isPending && <div>Carregando...</div>}
+        {!isPending && !error && (
           <>
             <p className="font-bold">{data?.data.name}</p>
             <DrawerAccount owner={data?.data} />
@@ -66,15 +70,19 @@ const Home = () => {
         <CardEstablishment />
       </div>
 
-      {/* <div className="mb-5">
-        <CardDevices />
-      </div> */}
+      {data?.data.hasThirdPartyAccess && (
+        <>
+          <div className="mb-5">
+            <CardDevices />
+          </div>
 
-      <div className="mb-5">
-        <CardPlaylist />
-      </div>
+          <div className="mb-5">
+            <CardPlaylist />
+          </div>
+        </>
+      )}
 
-      {!isLoading && !isError && !data?.data.hasThirdPartyAccess && (
+      {!isPending && !error && !data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
           isOpen={isOpen}
           onClose={onClose}
