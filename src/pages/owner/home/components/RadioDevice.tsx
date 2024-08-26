@@ -13,7 +13,7 @@ const RadioDevice = (props) => {
         borderRadius="md"
         boxShadow="md"
         _checked={{
-          bg: "red.600",
+          bg: "red.500",
           color: "white",
           borderColor: "red.600",
         }}

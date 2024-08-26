@@ -1,103 +1,24 @@
-import { useEffect, useState } from "react";
-import { PlaylistType } from "../@types/PlaylistType";
+import { useState } from "react";
 import defaultImage from "../../../assets/images/default.jpg";
-import { useToast } from "@chakra-ui/react";
-import BlockedGenre from "./components/BlockedGenre";
 import SimpleCard from "../../../components/SimpleCard/SimpleCard";
-import DrawerGenres from "../../../components/DrawerGenres/DrawerGenres";
-import { useDisclosure } from "@chakra-ui/react";
-import { Edit, PlusCircle } from "react-feather";
-import apiCommonInstance from "../../../api/config/apiCommonInstance";
+import { getPlaylist } from "../../../api/services/EstablishmentService";
+import { useQuery } from "@tanstack/react-query";
+import { OwnerType } from "../../../@types/OwnerType";
+import { getDecodedAccessToken, mapTokenToOwner } from "../../../utils";
+import ContentBlock from "./components/ContentBlock";
+import ContentInitial from "./components/ContentInitial";
 
 const Playlist = () => {
-  const toast = useToast();
-  const [playlist, setPlaylist] = useState<PlaylistType>({} as PlaylistType);
+  const [owner] = useState<OwnerType>(mapTokenToOwner(getDecodedAccessToken()));
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["playlist"],
+    refetchOnWindowFocus: false,
+    queryFn: () => getPlaylist(),
+  });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  if (isLoading) return <div>Carregando...</div>;
 
-  const [genres, setGenres] = useState<string[]>([]);
-
-  const getPlaylist = async () => {
-    try {
-      const response = await apiCommonInstance.get("/establishment/playlist");
-
-      if (response.status === 200) {
-        setPlaylist(response.data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const setPlaylistInitialGenres = async () => {
-    try {
-      const response = await apiCommonInstance.put(
-        "/establishment/playlist/genres/initial",
-        {
-          genres: genres,
-        }
-      );
-
-      if (response.status === 201) {
-        toast({
-          position: "top",
-          title: "Gêneros iniciais definidos com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao definir os Gêneros iniciais da playlist. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const setBlockGenres = async () => {
-    try {
-      const response = await apiCommonInstance.put(
-        "/establishment/playlist/genres/block",
-        {
-          genres: genres,
-        }
-      );
-
-      if (response.status === 200) {
-        toast({
-          position: "top",
-          title: "Gêneros bloqueados com sucesso!",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-        onClose();
-        return;
-      }
-    } catch {
-      toast({
-        position: "top",
-        title: "Opa! Parece que algo deu errado.",
-        description:
-          "Ocorreu um problema ao bloquear os Gêneros da playlist. Tente novamente.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
-  useEffect(() => {
-    getPlaylist();
-  }, []);
+  if (error) return <div>Não foi pssível carregar este componente.</div>;
 
   return (
     <>
@@ -108,8 +29,8 @@ const Playlist = () => {
           alt="Imagem da Playlist"
         />
         <div className="my-5">
-          <p className="text-2xl font-bold">{playlist.name}</p>
-          <p>{playlist.description}</p>
+          <p className="text-2xl font-bold">{data?.data.name}</p>
+          <p>{data?.data.description}</p>
         </div>
       </div>
 
@@ -117,22 +38,9 @@ const Playlist = () => {
         title="Gêneros bloqueados"
         description="Bloqueie gêneros para evitar musicas indesejadas."
       >
-        <div className="flex flex-wrap gap-2">
-          {playlist?.blockedGenres?.length > 0 &&
-            playlist.blockedGenres.map((genre) => (
-              <BlockedGenre key={genre} genre={genre} />
-            ))}
-          <button className="p-4 hover:text-primary" onClick={onOpen}>
-            <PlusCircle size={16} />
-          </button>
-        </div>
-
-        <DrawerGenres
-          establishmentId="1"
-          isOpen={isOpen}
-          onClose={onClose}
-          setGenres={setGenres}
-          handleSubmit={setBlockGenres}
+        <ContentBlock
+          playlist={data?.data}
+          establishmentId={owner.establishmentId}
         />
       </SimpleCard>
 
@@ -140,22 +48,9 @@ const Playlist = () => {
         title="Gêneros da playlist"
         description="Defina seu gosto, escolha até 3 gêneros para iniciar a playlist"
       >
-        <div className="flex flex-wrap gap-2">
-          {playlist?.initialGenres?.length > 0 &&
-            playlist.initialGenres.map((genre) => (
-              <BlockedGenre key={genre} genre={genre} />
-            ))}
-          <button className="p-4 hover:text-primary" onClick={onOpen}>
-            <Edit size={16} />
-          </button>
-        </div>
-
-        <DrawerGenres
-          establishmentId="1"
-          isOpen={isOpen}
-          onClose={onClose}
-          setGenres={setGenres}
-          handleSubmit={setPlaylistInitialGenres}
+        <ContentInitial
+          playlist={data?.data}
+          establishmentId={owner.establishmentId}
         />
       </SimpleCard>
     </>

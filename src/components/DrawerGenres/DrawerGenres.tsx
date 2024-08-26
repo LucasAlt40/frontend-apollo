@@ -22,7 +22,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   setGenres: React.Dispatch<React.SetStateAction<string[]>>;
-  handleSubmit: () => void;
+  handleSubmit: any;
   preSelectedGenres?: string[];
   genreLimit?: number;
   drawerTitle?: string;

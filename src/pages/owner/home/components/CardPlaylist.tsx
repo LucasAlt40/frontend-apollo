@@ -22,12 +22,15 @@ const CardPlaylist = () => {
 
   if (data?.data === "") {
     return (
-      <Button
-        rightIcon={<Plus size={20} />}
-        onClick={createEstablishmentPlaylist}
-      >
-        Criar playlist
-      </Button>
+      <div className="w-full flex justify-center bg-[#f1f1f1] rounded-lg p-4">
+        <Button
+          colorScheme="red"
+          rightIcon={<Plus size={20} />}
+          onClick={createEstablishmentPlaylist}
+        >
+          Criar playlist
+        </Button>
+      </div>
     );
   }
 
@@ -35,11 +38,7 @@ const CardPlaylist = () => {
     <div className="w-full bg-[#f1f1f1] rounded-lg p-4">
       <img
         className="rounded-lg"
-        src={
-          data?.data.images !== undefined
-            ? data?.data.images[0].url
-            : defaultImage
-        }
+        src={data?.data.images ? data?.data.images[0].url : defaultImage}
         alt="Imagem da Playlist"
       />
       <div className="my-5">

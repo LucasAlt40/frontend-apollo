@@ -17,14 +17,17 @@ const Establishment = () => {
 
   return (
     <>
+      <span className="text-muted font-medium">Ambiente</span>
       <div className="mb-5">
         <CardEstablishment establishment={data?.data} />
       </div>
 
-      <div className="mb-5">
+      <span className="text-muted font-medium">Dispositivos disponíveis</span>
+      <div className="mb-5 border p-4 rounded-lg">
         <RadioGroupDevices deviceId={data?.data.deviceId} />
       </div>
 
+      <span className="text-muted font-medium">Playlist</span>
       <div className="mb-5">
         <CardPlaylist />
       </div>

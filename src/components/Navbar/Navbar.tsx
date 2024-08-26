@@ -10,7 +10,7 @@ const Navbar = () => {
         <a href="/owner/home">
           <Home />
         </a>
-        <a href="#">
+        <a href="/owner/player">
           <Music />
         </a>
       </div>

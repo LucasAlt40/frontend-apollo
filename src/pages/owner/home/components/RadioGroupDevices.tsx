@@ -42,7 +42,7 @@ const RadioGroupDevices = ({ deviceId }: Props) => {
         return (
           <RadioDevice key={device.id} {...radio}>
             <div className="flex flex-col items-center">
-              <p>{device.name}</p>
+              <p className="max-w-20 text-center">{device.name}</p>
               {icons[device.type.toLowerCase()]}
             </div>
           </RadioDevice>
