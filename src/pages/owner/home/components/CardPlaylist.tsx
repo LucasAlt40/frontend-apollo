@@ -4,7 +4,7 @@ import {
   getEstablishmentPlaylist,
 } from "../../../../api/services/EstablishmentService";
 import { Plus, Settings } from "react-feather";
-import defaultImage from "../../../../assets/images/default.jpg";
+import defaultImage from "../../../../assets/images/default-playlist.jpg";
 import { Button } from "@chakra-ui/react";
 
 const CardPlaylist = () => {

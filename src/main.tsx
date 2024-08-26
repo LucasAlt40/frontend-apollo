@@ -12,11 +12,11 @@ import "./index.css";
 
 import Login from "./pages/login/Login.tsx";
 import OwnerLayout from "./layouts/OwnerLayout.tsx";
-import Home from "./pages/owner/home/Home.tsx";
+import OwnerHome from "./pages/owner/home/Home.tsx";
 import Playlist from "./pages/owner/playlist/Playlist.tsx";
 import Player from "./pages/owner/player/Player.tsx";
 import UserLayout from "./layouts/UserLayout.tsx";
-import UserHome from "./pages/user/home/UserHome.tsx";
+import UserHome from "./pages/user/home/Home.tsx";
 import theme from "./assets/theme.ts";
 
 const router = createBrowserRouter([
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "home",
-        element: <Home />,
+        element: <OwnerHome />,
       },
       {
         path: "playlist",

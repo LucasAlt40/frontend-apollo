@@ -6,6 +6,8 @@ export default {
       transparent: "transparent",
       current: "currentColor",
       primary: "#e11d48",
+      mediumRose: "#D31D45",
+      darkRose: "#A91435",
       white: "#ffffff",
       purple: "#3f3cbb",
       midnight: "#121063",

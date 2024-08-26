@@ -1,5 +1,5 @@
 import { useState } from "react";
-import defaultImage from "../../../assets/images/default.jpg";
+import defaultImage from "../../../assets/images/default-playlist.jpg";
 import SimpleCard from "../../../components/SimpleCard/SimpleCard";
 import { getPlaylist } from "../../../api/services/EstablishmentService";
 import { useQuery } from "@tanstack/react-query";
