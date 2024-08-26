@@ -29,7 +29,7 @@ const RadioGroupDevices = ({ deviceId }: Props) => {
 
   if (isError) return <div>não foi possível carregar este componente</div>;
 
-  const icons = {
+  const icons: any = {
     computer: <Monitor size={20} />,
     smartphone: <Smartphone size={20} />,
     speaker: <Speaker size={20} />,
