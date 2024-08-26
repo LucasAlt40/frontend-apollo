@@ -13,6 +13,7 @@ import Playlist from "./pages/owner/playlist/Playlist.tsx";
 import Player from "./pages/owner/player/Player.tsx";
 import UserLayout from "./layouts/UserLayout.tsx";
 import UserHome from "./pages/user/home/UserHome.tsx";
+import theme from "./assets/theme.ts";
 
 const router = createBrowserRouter([
   {
@@ -54,7 +55,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <RouterProvider router={router} />
       </ChakraProvider>
     </QueryClientProvider>
