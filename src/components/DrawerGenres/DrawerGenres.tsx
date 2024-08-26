@@ -14,8 +14,7 @@ import {
 import { Check, Search } from "react-feather";
 import { useState } from "react";
 import GenreCard from "../GenreCard/GenreCard";
-import { useQuery } from "@tanstack/react-query";
-import { getEstablishmentGenres } from "../../api/services/EstablishmentService";
+import { GetEstablishmentGenres } from "../../api/services/EstablishmentService";
 
 type Props = {
   establishmentId: string;
@@ -42,11 +41,7 @@ const DrawerGenres = ({
     useState<string[]>(preSelectedGenres);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data } = useQuery({
-    queryKey: ["establishmentGenres", establishmentId],
-    refetchOnWindowFocus: false,
-    queryFn: () => getEstablishmentGenres(establishmentId),
-  });
+  const { data } = GetEstablishmentGenres(establishmentId);
 
   const handleSelect = (genre: string) => {
     if (selectedGenres.includes(genre)) {
@@ -85,13 +80,16 @@ const DrawerGenres = ({
                 placeholder="Buscar gênero"
                 borderColor="var(--color-rose)"
                 color="var(--color-rose)"
-                pr="4.5rem"
+                colorScheme="red"
+                width="100%"
+                borderRadius="50px"
+                height="50px"
                 focusBorderColor="var(--color-rose)"
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
-              <InputRightElement width="4.5rem">
-                <Search />
+              <InputRightElement width="4rem">
+                <Search className="mt-2" />
               </InputRightElement>
             </InputGroup>
           </div>
@@ -117,6 +115,9 @@ const DrawerGenres = ({
           <Button
             className="w-full"
             colorScheme="red"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             rightIcon={<Check />}
             onClick={handleSubmit}
           >
