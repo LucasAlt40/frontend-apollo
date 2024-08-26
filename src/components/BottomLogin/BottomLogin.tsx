@@ -1,16 +1,14 @@
 import { useState, useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
 import { ArrowLeft, Shield, User } from "react-feather";
-
-import style from "./index.module.css";
+import { UserType } from "../../@types/UserType";
 import OwnerLogin from "../OwnerLogin/OwnerLogin";
 import UserLogin from "../UserLogin/UserLogin";
 import DrawerGenres from "../DrawerGenres/DrawerGenres";
-import { UserType } from "../../@types/UserType";
-import apiCommonInstance from "../../api/config/apiCommonInstance";
+import { LoginUser } from "../../api/services/AuthService";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const BottomLogin = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,15 +24,7 @@ const BottomLogin = () => {
     genres: [],
   });
 
-  useEffect(() => {
-    if (step === 2) {
-      onOpen();
-    }
-  }, [step, onOpen]);
-
-  useEffect(() => {
-    setUser((prevData) => ({ ...prevData, genres }));
-  }, [genres]);
+  const { mutate, isSuccess, isError, isPending, data } = LoginUser(); // Adicione isLoading
 
   const handleStepChange = (newStep: number, ownerStatus: boolean) => {
     setIsOwner(ownerStatus);
@@ -46,23 +36,9 @@ const BottomLogin = () => {
     onClose();
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (user.establishmentId && user.genres.length > 0 && user.username) {
-      const response = await apiCommonInstance.post("/auth/user", user);
-      if (response.data) {
-        Cookies.set("accessToken", response.data.accessToken, {
-          expires: 2 / 24,
-        });
-        navigate("user/home");
-      } else {
-        toast({
-          title: "Erro",
-          description: "Algo deu errado ao tentar entrar no estabelecimento.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      mutate(user);
     } else {
       toast({
         title: "Erro",
@@ -80,21 +56,27 @@ const BottomLogin = () => {
         return (
           <>
             <Button
+              width="100%"
+              borderRadius="50px"
+              height="50px"
+              colorScheme="red"
+              rightIcon={<User />}
+              className="mb-4"
+              onClick={() => handleStepChange(1, false)}
+            >
+              <p className="text-lg">Usuário</p>
+            </Button>
+            <Button
+              width="100%"
+              borderRadius="50px"
+              height="50px"
               colorScheme="red"
               variant="outline"
               rightIcon={<Shield />}
-              className="m-4"
+              className="mb-4"
               onClick={() => handleStepChange(1, true)}
             >
-              Proprietário
-            </Button>
-            <Button
-              colorScheme="red"
-              rightIcon={<User />}
-              className="m-4"
-              onClick={() => handleStepChange(1, false)}
-            >
-              Usuário
+              <p className="text-lg">Proprietário</p>
             </Button>
           </>
         );
@@ -132,8 +114,38 @@ const BottomLogin = () => {
     }
   };
 
+  useEffect(() => {
+    if (step === 2) {
+      onOpen();
+    }
+  }, [step, onOpen]);
+
+  useEffect(() => {
+    setUser((prevData) => ({ ...prevData, genres }));
+  }, [genres]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      Cookies.set("accessToken", data?.data.accessToken, {
+        expires: 2 / 24,
+      });
+      onClose();
+      navigate("user/home");
+    }
+
+    if (isError) {
+      toast({
+        title: "Erro",
+        description: "Algo deu errado ao tentar entrar no estabelecimento.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  }, [isSuccess, isError]); //eslint-disable-line
+
   return (
-    <div className={style.loginForm}>
+    <div className="rounded-t-3xl w-full bg-white flex flex-col items-center relative">
       {step > 0 && (
         <ArrowLeft
           size={32}
@@ -141,9 +153,11 @@ const BottomLogin = () => {
           onClick={() => step > 0 && setStep(step - 1)}
         />
       )}
-      <p className="mb-4">{getStepTitle()}</p>
-      <div className="flex flex-col justify-between items-center">
-        {renderStepContent()}
+      <h2 className="font-semibold mt-4 text-primary text-xl">
+        {getStepTitle()}
+      </h2>
+      <div className="w-full px-4 py-6 flex flex-col justify-between items-center">
+        {isPending ? <LoadingSpinner /> : renderStepContent()}
       </div>
     </div>
   );

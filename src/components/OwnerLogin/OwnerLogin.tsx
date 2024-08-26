@@ -73,7 +73,9 @@ const OwnerLogin = () => {
           borderColor="var(--color-rose)"
           type="text"
           focusBorderColor="var(--color-rose)"
-          width="auto"
+          width="100%"
+          borderRadius="50px"
+          height="50px"
           placeholder="Código do Estabelecimento"
           name="establishmentId"
           value={formData.establishmentId}
@@ -85,7 +87,9 @@ const OwnerLogin = () => {
           borderColor="var(--color-rose)"
           type="email"
           focusBorderColor="var(--color-rose)"
-          width="auto"
+          width="100%"
+          borderRadius="50px"
+          height="50px"
           placeholder="Email"
           name="email"
           value={formData.email}
@@ -95,7 +99,9 @@ const OwnerLogin = () => {
           <Input
             borderColor="var(--color-rose)"
             color="var(--color-rose)"
-            pr="4.5rem"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             focusBorderColor="var(--color-rose)"
             type={showPassword ? "text" : "password"}
             placeholder="Enter password"
@@ -106,11 +112,13 @@ const OwnerLogin = () => {
           <InputRightElement width="4.5rem">
             {showPassword ? (
               <Eye
+                className="mt-2"
                 color="var(--color-rose)"
                 onClick={() => setShowPassword(false)}
               />
             ) : (
               <EyeOff
+                className="mt-2"
                 color="var(--color-rose)"
                 onClick={() => setShowPassword(true)}
               />
@@ -119,6 +127,9 @@ const OwnerLogin = () => {
         </InputGroup>
         <Button
           colorScheme="red"
+          width="100%"
+          borderRadius="50px"
+          height="50px"
           rightIcon={<ArrowRight />}
           onClick={handleSubmit}
         >

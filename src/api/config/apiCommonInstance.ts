@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from "js-cookie";
+import { getAccessToken } from "../../utils/jwtUtils";
 
 const apiCommonInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,14 +10,12 @@ const apiCommonInstance = axios.create({
 
 apiCommonInstance.interceptors.request.use(
   (config) => {
-    if (
-      !config.url?.includes("auth/user") ||
-      !config.url?.includes("auth/owner")
-    ) {
-      const token = Cookies.get("accessToken");
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+    const token = getAccessToken();
+    const isAuthRoute =
+      config.url?.includes("auth/user") || config.url?.includes("auth/owner");
+
+    if (token && !isAuthRoute) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

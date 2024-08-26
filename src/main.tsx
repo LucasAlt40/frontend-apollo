@@ -1,7 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "./index.css";
@@ -25,6 +29,10 @@ const router = createBrowserRouter([
     element: <OwnerLayout />,
     children: [
       {
+        index: true,
+        element: <Navigate to="/owner/home" />,
+      },
+      {
         path: "home",
         element: <Home />,
       },
@@ -42,6 +50,10 @@ const router = createBrowserRouter([
     path: "/user",
     element: <UserLayout />,
     children: [
+      {
+        index: true,
+        element: <Navigate to="/user/home" />,
+      },
       {
         path: "home",
         element: <UserHome />,

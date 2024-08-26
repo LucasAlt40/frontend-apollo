@@ -1,17 +1,30 @@
+import { useQuery } from "@tanstack/react-query";
 import apiCommonInstance from "../config/apiCommonInstance";
 
 const apiUrl = "/establishment";
 
-const getEstablishmentById = async (id: string) => {
-  return await apiCommonInstance.get(`${apiUrl}/${id}`);
+const GetEstablishmentById = (id: string) => {
+  const query = useQuery({
+    queryFn: async () => await apiCommonInstance.get(`${apiUrl}/${id}`),
+    queryKey: ["establishment-info"],
+    enabled: !!id,
+  });
+
+  return query;
 };
 
 const getEstablishment = async () => {
   return await apiCommonInstance.get(apiUrl);
 };
 
-const getEstablishmentGenres = (id: string) => {
-  return apiCommonInstance.get(`${apiUrl}/playlist/genres/${id}`);
+const GetEstablishmentGenres = (id: string) => {
+  const query = useQuery({
+    queryKey: ["establishmentGenres", id],
+    refetchOnWindowFocus: false,
+    queryFn: () => apiCommonInstance.get(`${apiUrl}/playlist/genres/${id}`),
+    enabled: !!id,
+  });
+  return query;
 };
 
 const getAvailableDevices = async () => {
@@ -63,9 +76,9 @@ const unBlockGenres = async (genres: string[]) => {
 };
 
 export {
-  getEstablishmentById,
+  GetEstablishmentById,
   getEstablishment,
-  getEstablishmentGenres,
+  GetEstablishmentGenres,
   getAvailableDevices,
   setMainDevice,
   turnOnEstablishment,

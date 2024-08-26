@@ -1,3 +1,5 @@
+import { useMutation } from "@tanstack/react-query";
+import { UserType } from "../../@types/UserType";
 import apiCommonInstance from "../config/apiCommonInstance";
 
 const apiUrl = "/auth";
@@ -8,4 +10,13 @@ const sendAuthorizationCode = async (code: string) => {
   });
 };
 
-export { sendAuthorizationCode };
+const LoginUser = () => {
+  const mutation = useMutation({
+    mutationFn: (user: UserType) =>
+      apiCommonInstance.post(`${apiUrl}/user`, user),
+  });
+
+  return mutation;
+};
+
+export { sendAuthorizationCode, LoginUser };

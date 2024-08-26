@@ -2,8 +2,7 @@ import { Button, FormControl, Input, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { ArrowRight, Headphones } from "react-feather";
 import { UserType } from "../../@types/UserType";
-import { getEstablishmentById } from "../../api/services/EstablishmentService";
-import { useQuery } from "@tanstack/react-query";
+import { GetEstablishmentById } from "../../api/services/EstablishmentService";
 
 interface UserLoginProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -17,12 +16,8 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
     username: "",
   });
   const [showUsername, setShowUsername] = useState(false);
-  const { data, refetch } = useQuery({
-    queryKey: ["establishmentUserInfo", formData.establishmentId],
-    refetchOnWindowFocus: false,
-    queryFn: async () => await getEstablishmentById(formData.establishmentId),
-    enabled: false,
-  });
+
+  const { data } = GetEstablishmentById(formData.establishmentId);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,8 +32,6 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
   };
 
   const handleSearchEstablishment = async () => {
-    await refetch();
-
     if (data && !data?.data.isOff) {
       setShowUsername(true);
     } else {
@@ -71,7 +64,9 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
             borderColor="var(--color-rose)"
             type="text"
             focusBorderColor="var(--color-rose)"
-            width="auto"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             placeholder="Código do Estabelecimento"
             name="establishmentId"
             value={formData.establishmentId}
@@ -79,6 +74,9 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
           />
           <Button
             colorScheme="red"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             rightIcon={<ArrowRight />}
             onClick={handleSearchEstablishment}
           >
@@ -93,7 +91,9 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
             borderColor="var(--color-rose)"
             type="text"
             focusBorderColor="var(--color-rose)"
-            width="auto"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             placeholder="Digite um nome de usuário"
             name="username"
             value={formData.username}
@@ -101,6 +101,9 @@ const UserLogin: React.FC<UserLoginProps> = ({ setStep, setUser }) => {
           />
           <Button
             colorScheme="red"
+            width="100%"
+            borderRadius="50px"
+            height="50px"
             rightIcon={<Headphones />}
             onClick={() => setStep(2)}
           >
