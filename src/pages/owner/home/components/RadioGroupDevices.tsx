@@ -6,6 +6,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import RadioDevice from "./RadioDevice";
 import { DeviceType } from "../../@types/DevicesType";
+import { Monitor, Smartphone, Speaker } from "react-feather";
 
 type Props = {
   deviceId: string;
@@ -28,14 +29,22 @@ const RadioGroupDevices = ({ deviceId }: Props) => {
 
   if (isError) return <div>não foi possível carregar este componente</div>;
 
+  const icons = {
+    computer: <Monitor size={20} />,
+    smartphone: <Smartphone size={20} />,
+    speaker: <Speaker size={20} />,
+  };
+
   return (
     <HStack {...getRootProps()}>
       {data?.data.devices.map((device: DeviceType) => {
         const radio = getRadioProps({ value: device.id });
         return (
           <RadioDevice key={device.id} {...radio}>
-            <p>{device.name}</p>
-            <p>{device.type}</p>
+            <div className="flex flex-col items-center">
+              <p>{device.name}</p>
+              {icons[device.type.toLowerCase()]}
+            </div>
           </RadioDevice>
         );
       })}
