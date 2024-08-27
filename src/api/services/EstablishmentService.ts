@@ -172,26 +172,99 @@ const CreateEstablishmentPlaylist = () => {
   return mutation;
 };
 
-const getPlaylist = async () => {
-  return await apiCommonInstance.get("/establishment/playlist");
+const SetPlaylistInitialGenres = (onClose: any) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/initial", {
+        genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gêneros inicias definidos com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível definir os gêneros inicias.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
 };
 
-const setPlaylistInitialGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/initial", {
-    genres,
+const SetBlockGenres = (onClose: any) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/block", {
+        genres: genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gêneros bloqueados com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível bloquear os gêneros.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
   });
+  return mutation;
 };
 
-const setBlockGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/block", {
-    genres: genres,
-  });
-};
+const UnBlockGenres = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
-const unBlockGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/unblock", {
-    genres: genres,
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/unblock", {
+        genres: genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gênero desbloqueado!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível desbloquear o gênero.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
   });
+  return mutation;
 };
 
 export {
@@ -204,8 +277,7 @@ export {
   TurnOffEstablishment,
   GetEstablishmentPlaylist,
   CreateEstablishmentPlaylist,
-  getPlaylist,
-  setPlaylistInitialGenres,
-  setBlockGenres,
-  unBlockGenres,
+  SetPlaylistInitialGenres,
+  SetBlockGenres,
+  UnBlockGenres,
 };
