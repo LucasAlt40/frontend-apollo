@@ -151,7 +151,9 @@ const CreateEstablishmentPlaylist = () => {
     mutationFn: async () =>
       await apiCommonInstance.post("/establishment/playlist"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      queryClient.invalidateQueries({
+        queryKey: ["establishmentPlaylist", "establishment"],
+      });
       toast({
         position: "top",
         title: "Playlist gerada com sucesso!",
