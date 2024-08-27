@@ -1,20 +1,16 @@
 import { useState } from "react";
 import defaultImage from "../../../assets/images/default-playlist.jpg";
 import SimpleCard from "../../../components/SimpleCard/SimpleCard";
-import { getPlaylist } from "../../../api/services/EstablishmentService";
-import { useQuery } from "@tanstack/react-query";
 import { OwnerType } from "../../../@types/OwnerType";
 import { getDecodedAccessToken, mapTokenToOwner } from "../../../utils";
 import ContentBlock from "./components/ContentBlock";
 import ContentInitial from "./components/ContentInitial";
+import { GetEstablishmentPlaylist } from "../../../api/services/EstablishmentService";
 
 const Playlist = () => {
   const [owner] = useState<OwnerType>(mapTokenToOwner(getDecodedAccessToken()));
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["playlist"],
-    refetchOnWindowFocus: false,
-    queryFn: () => getPlaylist(),
-  });
+
+  const { isLoading, error, data } = GetEstablishmentPlaylist();
 
   if (isLoading) return <div>Carregando...</div>;
 
@@ -35,20 +31,20 @@ const Playlist = () => {
       </div>
 
       <SimpleCard
-        title="Gêneros bloqueados"
-        description="Bloqueie gêneros para evitar musicas indesejadas."
+        title="Gêneros da playlist"
+        description="Defina seu gosto, escolha até 3 gêneros para iniciar a playlist"
       >
-        <ContentBlock
+        <ContentInitial
           playlist={data?.data}
           establishmentId={owner.establishmentId}
         />
       </SimpleCard>
 
       <SimpleCard
-        title="Gêneros da playlist"
-        description="Defina seu gosto, escolha até 3 gêneros para iniciar a playlist"
+        title="Gêneros bloqueados"
+        description="Bloqueie gêneros para evitar musicas indesejadas."
       >
-        <ContentInitial
+        <ContentBlock
           playlist={data?.data}
           establishmentId={owner.establishmentId}
         />

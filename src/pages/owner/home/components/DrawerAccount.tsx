@@ -40,13 +40,13 @@ const DrawerAccount = ({ owner }: Props) => {
 
           <DrawerBody>
             <div className="mb-5">
-              <p className="font-bold">Informações da conta</p>
+              <p className="font-bold">Nome</p>
               <p>{owner.name}</p>
             </div>
             <div className="mb-5">
               <p className="font-bold">Spotify</p>
               {owner.hasThirdPartyAccess ? (
-                <p>Conta vinculada.</p>
+                <p>Conta vinculada</p>
               ) : (
                 <a
                   className="flex justify-between"

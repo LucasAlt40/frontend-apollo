@@ -1,8 +1,8 @@
 import { Power } from "react-feather";
 import { Button } from "@chakra-ui/react";
 import {
-  turnOffEstablishment,
-  turnOnEstablishment,
+  TurnOffEstablishment,
+  TurnOnEstablishment,
 } from "../../../../api/services/EstablishmentService";
 import { EstablishmentType } from "../../@types/EstablishmentType";
 
@@ -20,7 +20,7 @@ export const CardEstablishment = ({ establishment }: Props) => {
             Tocando agora
           </span>
         </div>
-        <Button onClick={turnOffEstablishment}>
+        <Button onClick={TurnOffEstablishment}>
           <Power />
         </Button>
       </div>
@@ -44,7 +44,7 @@ export const CardEstablishment = ({ establishment }: Props) => {
         <Button
           variant="outline"
           colorScheme="red"
-          onClick={turnOnEstablishment}
+          onClick={TurnOnEstablishment}
         >
           <Power size={20} />
         </Button>

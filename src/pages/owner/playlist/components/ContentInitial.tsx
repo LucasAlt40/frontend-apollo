@@ -1,7 +1,7 @@
 import { Edit } from "react-feather";
 import DrawerGenres from "../../../../components/DrawerGenres/DrawerGenres";
 import { PlaylistType } from "../../@types/PlaylistType";
-import { setPlaylistInitialGenres } from "../../../../api/services/EstablishmentService";
+import { SetPlaylistInitialGenres } from "../../../../api/services/EstablishmentService";
 import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
 
@@ -14,9 +14,12 @@ const ContentInitial = ({ playlist, establishmentId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [genres, setGenres] = useState<string[]>([]);
 
+  const { mutate } = SetPlaylistInitialGenres(onClose);
+
   const onSetInitial = () => {
-    setPlaylistInitialGenres(genres);
+    mutate(genres);
   };
+
   return (
     <>
       <div className="flex flex-wrap gap-2">

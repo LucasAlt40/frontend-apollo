@@ -1,31 +1,28 @@
 import { HStack, useRadioGroup } from "@chakra-ui/react";
 import {
-  getAvailableDevices,
-  setMainDevice,
+  GetAvailableDevices,
+  SetMainDevice,
 } from "../../../../api/services/EstablishmentService";
-import { useQuery } from "@tanstack/react-query";
 import RadioDevice from "./RadioDevice";
 import { DeviceType } from "../../@types/DevicesType";
 import { Monitor, Smartphone, Speaker } from "react-feather";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 type Props = {
   deviceId: string;
 };
 
 const RadioGroupDevices = ({ deviceId }: Props) => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["establishmentDevices"],
-    refetchOnWindowFocus: false,
-    queryFn: () => getAvailableDevices(),
-  });
+  const { data, isLoading, isError } = GetAvailableDevices();
+  const { mutate } = SetMainDevice();
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: "devices",
     defaultValue: deviceId,
-    onChange: setMainDevice,
+    onChange: mutate,
   });
 
-  if (isLoading) return <div>Carregando...</div>;
+  if (isLoading) return <LoadingSpinner />;
 
   if (isError) return <div>não foi possível carregar este componente</div>;
 

@@ -1,30 +1,26 @@
-import DrawerAccount from "./components/DrawerAccount";
 import { useSearchParams } from "react-router-dom";
 import { Alert, AlertIcon, useDisclosure } from "@chakra-ui/react";
-import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
-import { useQuery } from "@tanstack/react-query";
-import { getOwner } from "../../../api/services/OwnerService";
-import { sendAuthorizationCode } from "../../../api/services/AuthService";
-import { useState } from "react";
+import { GetOwner } from "../../../api/services/OwnerService";
+import { SendAuthorizationCode } from "../../../api/services/AuthService";
+import DrawerAccount from "./components/DrawerAccount";
 import Establishment from "./components/Establishment";
+import { useEffect, useState } from "react";
+import DrawerAlertLinkThirdParty from "./components/DrawerAlertLinkThirdParty";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { isLoading, error, data } = GetOwner();
+  const { mutate } = SendAuthorizationCode();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isLoading, error, data } = useQuery({
-    queryKey: ["owner"],
-    refetchOnWindowFocus: false,
-    queryFn: () => getOwner(),
-  });
 
   const [isAlertOpened, setIsAlertOpened] = useState(false);
 
-  if (!isLoading && !error) {
+  useEffect(() => {
+    const code = searchParams.get("code");
     if (!data?.data.hasThirdPartyAccess) {
-      const code = searchParams.get("code");
-
       if (code !== null) {
-        sendAuthorizationCode(code);
+        mutate(code);
         searchParams.delete("code");
         setSearchParams(searchParams);
       } else if (!isAlertOpened) {
@@ -32,7 +28,7 @@ const Home = () => {
         setIsAlertOpened(true);
       }
     }
-  }
+  }, [searchParams, mutate, setSearchParams, data, isAlertOpened, onOpen]);
 
   return (
     <>
@@ -57,7 +53,7 @@ const Home = () => {
 
       <Establishment owner={data?.data} />
 
-      {!isLoading && !error && !data?.data.hasThirdPartyAccess && (
+      {!data?.data.hasThirdPartyAccess && (
         <DrawerAlertLinkThirdParty
           isOpen={isOpen}
           onClose={onClose}
