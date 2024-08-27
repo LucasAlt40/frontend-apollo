@@ -1,24 +1,20 @@
-import { useQuery } from "@tanstack/react-query";
 import {
-  createEstablishmentPlaylist,
-  getEstablishmentPlaylist,
+  CreateEstablishmentPlaylist,
+  GetEstablishmentPlaylist,
 } from "../../../../api/services/EstablishmentService";
 import { Plus, Settings } from "react-feather";
 import defaultImage from "../../../../assets/images/default-playlist.jpg";
 import { Button } from "@chakra-ui/react";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 const CardPlaylist = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["establishmentPlaylist"],
-    refetchOnWindowFocus: false,
-    queryFn: () => getEstablishmentPlaylist(),
-  });
+  const { data, isLoading, isError } = GetEstablishmentPlaylist();
 
-  if (isLoading) return <div>Carregando...</div>;
+  const { mutate } = CreateEstablishmentPlaylist();
+
+  if (isLoading) return <LoadingSpinner />;
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
-
-  console.log(data?.data);
 
   if (data?.data === "") {
     return (
@@ -26,9 +22,9 @@ const CardPlaylist = () => {
         <Button
           colorScheme="red"
           rightIcon={<Plus size={20} />}
-          onClick={createEstablishmentPlaylist}
+          onClick={() => mutate()}
         >
-          Criar playlist
+          Gerar playlist
         </Button>
       </div>
     );

@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import apiCommonInstance from "../config/apiCommonInstance";
+import { useToast } from "@chakra-ui/react";
 
 const apiUrl = "/establishment";
 
@@ -13,8 +14,13 @@ const GetEstablishmentById = (id: string) => {
   return query;
 };
 
-const getEstablishment = async () => {
-  return await apiCommonInstance.get(apiUrl);
+const GetEstablishment = () => {
+  const query = useQuery({
+    queryKey: ["establishment"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await apiCommonInstance.get(apiUrl),
+  });
+  return query;
 };
 
 const GetEstablishmentGenres = (id: string) => {
@@ -27,66 +33,253 @@ const GetEstablishmentGenres = (id: string) => {
   return query;
 };
 
-const getAvailableDevices = async () => {
-  return await apiCommonInstance.get(`${apiUrl}/devices`);
-};
-
-const setMainDevice = async (deviceId: string) => {
-  return await apiCommonInstance.post(`${apiUrl}/devices`, {
-    id: deviceId,
+const GetAvailableDevices = () => {
+  const query = useQuery({
+    queryKey: ["establishmentDevices"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await apiCommonInstance.get(`${apiUrl}/devices`),
   });
+  return query;
 };
 
-const turnOnEstablishment = async () => {
-  return await apiCommonInstance.post("/establishment/turn-on");
-};
+const SetMainDevice = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
-const turnOffEstablishment = async () => {
-  return await apiCommonInstance.post("/establishment/turn-off");
-};
-
-const getEstablishmentPlaylist = async () => {
-  return await apiCommonInstance.get("/establishment/playlist");
-};
-
-const createEstablishmentPlaylist = async () => {
-  return await apiCommonInstance.post("/establishment/playlist");
-};
-
-const getPlaylist = async () => {
-  return await apiCommonInstance.get("/establishment/playlist");
-};
-
-const setPlaylistInitialGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/initial", {
-    genres,
+  const mutation = useMutation({
+    mutationFn: async (deviceId: string) =>
+      await apiCommonInstance.post(`${apiUrl}/devices`, {
+        id: deviceId,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentDevices"] });
+      toast({
+        position: "top",
+        title: "Dispositivo selecionado",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível selecionar o dispositivo",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
   });
+
+  return mutation;
 };
 
-const setBlockGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/block", {
-    genres: genres,
+const TurnOnEstablishment = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.post("/establishment/turn-on"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishment"] });
+      toast({
+        position: "top",
+        title: "Estabelecimento ligado",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível ligar o estabelecimento",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
   });
+
+  return mutation;
 };
 
-const unBlockGenres = async (genres: string[]) => {
-  return await apiCommonInstance.put("/establishment/playlist/genres/unblock", {
-    genres: genres,
+const TurnOffEstablishment = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.post("/establishment/turn-off"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishment"] });
+      toast({
+        position: "top",
+        title: "Estabelecimento desligado",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível desligar o estabelecimento",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
   });
+
+  return mutation;
+};
+
+const GetEstablishmentPlaylist = () => {
+  const query = useQuery({
+    queryKey: ["establishmentPlaylist"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await apiCommonInstance.get("/establishment/playlist"),
+  });
+  return query;
+};
+
+const CreateEstablishmentPlaylist = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.post("/establishment/playlist"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["establishmentPlaylist", "establishment"],
+      });
+      toast({
+        position: "top",
+        title: "Playlist gerada com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível gerar a playlist",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const SetPlaylistInitialGenres = (onClose: any) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/initial", {
+        genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gêneros inicias definidos com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível definir os gêneros inicias.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const SetBlockGenres = (onClose: any) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/block", {
+        genres: genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gêneros bloqueados com sucesso!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível bloquear os gêneros.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const UnBlockGenres = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (genres: string[]) =>
+      await apiCommonInstance.put("/establishment/playlist/genres/unblock", {
+        genres: genres,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["establishmentPlaylist"] });
+      toast({
+        position: "top",
+        title: "Gênero desbloqueado!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível desbloquear o gênero.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
 };
 
 export {
   GetEstablishmentById,
-  getEstablishment,
+  GetEstablishment,
   GetEstablishmentGenres,
-  getAvailableDevices,
-  setMainDevice,
-  turnOnEstablishment,
-  turnOffEstablishment,
-  getEstablishmentPlaylist,
-  createEstablishmentPlaylist,
-  getPlaylist,
-  setPlaylistInitialGenres,
-  setBlockGenres,
-  unBlockGenres,
+  GetAvailableDevices,
+  SetMainDevice,
+  TurnOnEstablishment,
+  TurnOffEstablishment,
+  GetEstablishmentPlaylist,
+  CreateEstablishmentPlaylist,
+  SetPlaylistInitialGenres,
+  SetBlockGenres,
+  UnBlockGenres,
 };

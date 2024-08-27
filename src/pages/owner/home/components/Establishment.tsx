@@ -1,22 +1,18 @@
-import { useQuery } from "@tanstack/react-query";
 import RadioGroupDevices from "./RadioGroupDevices";
 import { CardEstablishment } from "./CardEstablishment";
 import CardPlaylist from "./CardPlaylist";
-import { getEstablishment } from "../../../../api/services/EstablishmentService";
+import { GetEstablishment } from "../../../../api/services/EstablishmentService";
 import { OwnerType } from "../../../../@types/OwnerType";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 type Props = {
   owner: OwnerType;
 };
 
 const Establishment = ({ owner }: Props) => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["establishment"],
-    refetchOnWindowFocus: false,
-    queryFn: () => getEstablishment(),
-  });
+  const { data, isLoading, isError } = GetEstablishment();
 
-  if (isLoading) return <div>Carregando...</div>;
+  if (isLoading) return <LoadingSpinner />;
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
