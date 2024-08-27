@@ -1,7 +1,23 @@
 import style from "./index.module.css";
 import BottomLogin from "../../components/BottomLogin/BottomLogin";
+import { getDecodedAccessToken } from "../../utils";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Login = () => {
+  const tokenData = getDecodedAccessToken();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (tokenData) {
+      if (tokenData?.scope) {
+        navigate("/owner");
+      } else {
+        navigate("/user");
+      }
+    }
+  }, [tokenData]); //eslint-disable-line
+
   return (
     <>
       <main className={style.container}>

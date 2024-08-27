@@ -11,13 +11,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 
 import Login from "./pages/login/Login.tsx";
-import OwnerLayout from "./layouts/OwnerLayout.tsx";
 import OwnerHome from "./pages/owner/home/Home.tsx";
 import Playlist from "./pages/owner/playlist/Playlist.tsx";
 import Player from "./pages/owner/player/Player.tsx";
-import UserLayout from "./layouts/UserLayout.tsx";
 import UserHome from "./pages/user/home/Home.tsx";
 import theme from "./assets/theme.ts";
+import ProtectedRoute from "./auth/ProtectedRoute.tsx";
+import UserLayout from "./layouts/UserLayout.tsx";
+import OwnerLayout from "./layouts/OwnerLayout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/owner",
-    element: <OwnerLayout />,
+    element: (
+      <ProtectedRoute
+        element={<OwnerLayout />}
+        requiredScope={["ROLE_ADMIN"]}
+      />
+    ),
     children: [
       {
         index: true,
@@ -34,21 +40,33 @@ const router = createBrowserRouter([
       },
       {
         path: "home",
-        element: <OwnerHome />,
+        element: (
+          <ProtectedRoute
+            element={<OwnerHome />}
+            requiredScope={["ROLE_ADMIN"]}
+          />
+        ),
       },
       {
         path: "playlist",
-        element: <Playlist />,
+        element: (
+          <ProtectedRoute
+            element={<Playlist />}
+            requiredScope={["ROLE_ADMIN"]}
+          />
+        ),
       },
       {
         path: "player",
-        element: <Player />,
+        element: (
+          <ProtectedRoute element={<Player />} requiredScope={["ROLE_ADMIN"]} />
+        ),
       },
     ],
   },
   {
     path: "/user",
-    element: <UserLayout />,
+    element: <ProtectedRoute element={<UserLayout />} />,
     children: [
       {
         index: true,
@@ -56,7 +74,7 @@ const router = createBrowserRouter([
       },
       {
         path: "home",
-        element: <UserHome />,
+        element: <ProtectedRoute element={<UserHome />} />,
       },
     ],
   },

@@ -1,8 +1,12 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, redirect } from "react-router-dom";
 import Header from "../components/Header/Header";
 import Navbar from "../components/Navbar/Navbar";
+import { getDecodedAccessToken } from "../utils";
 
 const OwnerLayout = () => {
+  const accessToken = getDecodedAccessToken();
+  if (!accessToken || accessToken?.scope) redirect("/");
+
   return (
     <>
       <Header />
