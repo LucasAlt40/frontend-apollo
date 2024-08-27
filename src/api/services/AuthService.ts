@@ -12,8 +12,8 @@ const sendAuthorizationCode = async (code: string) => {
 
 const LoginUser = () => {
   const mutation = useMutation({
-    mutationFn: (user: UserType) =>
-      apiCommonInstance.post(`${apiUrl}/user`, user),
+    mutationFn: async (user: UserType) =>
+      await apiCommonInstance.post(`${apiUrl}/user`, user),
   });
 
   return mutation;

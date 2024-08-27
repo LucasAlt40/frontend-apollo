@@ -7,18 +7,24 @@ import { PlaylistType } from "../../@types/PlaylistType";
 import { useDisclosure } from "@chakra-ui/react";
 import DrawerGenres from "../../../../components/DrawerGenres/DrawerGenres";
 import { PlusCircle, Trash } from "react-feather";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 
 type Props = {
   playlist: PlaylistType;
   establishmentId: string;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<AxiosResponse<any, any>, Error>>;
 };
 
-const ContentBlock = ({ playlist, establishmentId }: Props) => {
+const ContentBlock = ({ playlist, establishmentId, refetch }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [genres, setGenres] = useState<string[]>([]);
 
-  const onBlock = () => {
-    setBlockGenres(genres);
+  const onBlock = async () => {
+    await setBlockGenres(genres);
+    refetch();
   };
 
   return (

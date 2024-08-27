@@ -10,7 +10,7 @@ import ContentInitial from "./components/ContentInitial";
 
 const Playlist = () => {
   const [owner] = useState<OwnerType>(mapTokenToOwner(getDecodedAccessToken()));
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["playlist"],
     refetchOnWindowFocus: false,
     queryFn: () => getPlaylist(),
@@ -41,6 +41,7 @@ const Playlist = () => {
         <ContentBlock
           playlist={data?.data}
           establishmentId={owner.establishmentId}
+          refetch={refetch}
         />
       </SimpleCard>
 
