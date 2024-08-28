@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getDecodedAccessToken, mapTokenToUser } from "../../../utils";
 import { MapPin, Users } from "react-feather";
 import { UserType } from "../../../@types/UserType";
@@ -7,13 +7,22 @@ import { GetEstablishmentById } from "../../../api/services/EstablishmentService
 import DrawerAccount from "./components/DrawerAccount";
 import defaultImage from "../../../assets/images/default-establishment.jpg";
 import SimpleCard from "../../../components/SimpleCard/SimpleCard";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   const [user] = useState<UserType>(mapTokenToUser(getDecodedAccessToken()));
 
   const { data, isLoading, isError } = GetEstablishmentById(
     user.establishmentId
   );
+
+  useEffect(() => {
+    if (!user.username) {
+      navigate("/owner");
+    }
+  }, []); //eslint-disable-line
 
   return (
     <>

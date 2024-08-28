@@ -269,6 +269,104 @@ const UnBlockGenres = () => {
   return mutation;
 };
 
+const GetPlayerState = () => {
+  const query = useQuery({
+    queryKey: ["playerState"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await apiCommonInstance.get("establishment/player"),
+  });
+
+  return query;
+};
+
+const ResumePlayer = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.put("/establishment/player/resume"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playerState"] });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível retomar a música.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const PausePlayer = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.put("/establishment/player/pause"),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["playerState"] });
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível pausar a música.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const NextMusic = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.post("/establishment/player/next"),
+    onSuccess: () => {
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["playerState"] });
+      }, 350);
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível pular a música.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
+const PreviousMusic = () => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () =>
+      await apiCommonInstance.post("/establishment/player/previous"),
+    onSuccess: () => {
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["playerState"] });
+      }, 350);
+    },
+    onError: () =>
+      toast({
+        position: "top",
+        title: "Não foi possível pular a música.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
+  return mutation;
+};
+
 export {
   GetEstablishmentById,
   GetEstablishment,
@@ -282,4 +380,9 @@ export {
   SetPlaylistInitialGenres,
   SetBlockGenres,
   UnBlockGenres,
+  GetPlayerState,
+  ResumePlayer,
+  PausePlayer,
+  NextMusic,
+  PreviousMusic,
 };

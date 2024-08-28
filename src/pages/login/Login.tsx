@@ -9,14 +9,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (tokenData) {
+    if (tokenData.establishmentId) {
       if (tokenData?.scope) {
         navigate("/owner");
       } else {
         navigate("/user");
       }
     }
-  }, [tokenData]); //eslint-disable-line
+  }, []); //eslint-disable-line
 
   return (
     <>
