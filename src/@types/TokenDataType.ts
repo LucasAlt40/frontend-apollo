@@ -5,4 +5,5 @@ export type TokenDataType = {
   ownerId?: string | number;
   email?: string;
   scope?: Array<string>;
+  exp?: number
 };
