@@ -6,13 +6,14 @@ import { getDecodedAccessToken, mapTokenToOwner } from "../../../utils";
 import ContentBlock from "./components/ContentBlock";
 import ContentInitial from "./components/ContentInitial";
 import { GetEstablishmentPlaylist } from "../../../api/services/EstablishmentService";
+import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner";
 
 const Playlist = () => {
   const [owner] = useState<OwnerType>(mapTokenToOwner(getDecodedAccessToken()));
 
   const { isLoading, error, data } = GetEstablishmentPlaylist();
 
-  if (isLoading) return <div>Carregando...</div>;
+  if (isLoading) return <LoadingSpinner />;
 
   if (error) return <div>Não foi pssível carregar este componente.</div>;
 
@@ -21,7 +22,9 @@ const Playlist = () => {
       <div className="w-full bg-[#f1f1f1] rounded-lg p-4 mb-5">
         <img
           className="rounded-lg"
-          src={defaultImage}
+          src={
+            data?.data.images !== null ? data?.data.images[0].url : defaultImage
+          }
           alt="Imagem da Playlist"
         />
         <div className="my-5">

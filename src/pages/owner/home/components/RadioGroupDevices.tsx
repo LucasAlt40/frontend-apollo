@@ -1,4 +1,4 @@
-import { HStack, useRadioGroup } from "@chakra-ui/react";
+import { HStack, Skeleton, useRadioGroup } from "@chakra-ui/react";
 import {
   GetAvailableDevices,
   SetMainDevice,
@@ -6,7 +6,6 @@ import {
 import RadioDevice from "./RadioDevice";
 import { DeviceType } from "../../@types/DevicesType";
 import { Monitor, Smartphone, Speaker } from "react-feather";
-import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 type Props = {
   deviceId: string;
@@ -22,7 +21,7 @@ const RadioGroupDevices = ({ deviceId }: Props) => {
     onChange: mutate,
   });
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <Skeleton width="100%" height="80px"></Skeleton>;
 
   if (isError) return <div>não foi possível carregar este componente</div>;
 

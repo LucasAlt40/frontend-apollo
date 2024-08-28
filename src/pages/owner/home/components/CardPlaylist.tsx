@@ -4,15 +4,14 @@ import {
 } from "../../../../api/services/EstablishmentService";
 import { Plus, Settings } from "react-feather";
 import defaultImage from "../../../../assets/images/default-playlist.jpg";
-import { Button } from "@chakra-ui/react";
-import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
+import { Button, Skeleton } from "@chakra-ui/react";
 
 const CardPlaylist = () => {
   const { data, isLoading, isError } = GetEstablishmentPlaylist();
 
   const { mutate } = CreateEstablishmentPlaylist();
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <Skeleton width="100%" height="300px"></Skeleton>;
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
@@ -41,7 +40,7 @@ const CardPlaylist = () => {
           </div>
           <div className="w-full flex justify-end">
             <a
-              className="flex items-center gap-2 bg-white px-3 py-1 rounded-md"
+              className="px-4 py-2 flex items-center gap-2 bg-white rounded-md"
               href="/owner/playlist"
             >
               <span className="font-medium">Configurar</span>

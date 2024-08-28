@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { Alert, AlertIcon, useDisclosure } from "@chakra-ui/react";
+import { Alert, AlertIcon, Skeleton, useDisclosure } from "@chakra-ui/react";
 import { GetOwner } from "../../../api/services/OwnerService";
 import { SendAuthorizationCode } from "../../../api/services/AuthService";
 import DrawerAccount from "./components/DrawerAccount";
@@ -18,21 +18,31 @@ const Home = () => {
 
   useEffect(() => {
     const code = searchParams.get("code");
-    if (!data?.data.hasThirdPartyAccess) {
-      if (code !== null) {
-        mutate(code);
-        searchParams.delete("code");
-        setSearchParams(searchParams);
-      } else if (!isAlertOpened) {
-        onOpen();
-        setIsAlertOpened(true);
+    if (!isLoading) {
+      if (!data?.data.hasThirdPartyAccess) {
+        if (code !== null) {
+          mutate(code);
+          searchParams.delete("code");
+          setSearchParams(searchParams);
+        } else if (!isAlertOpened) {
+          onOpen();
+          setIsAlertOpened(true);
+        }
       }
     }
-  }, [searchParams, mutate, setSearchParams, data, isAlertOpened, onOpen]);
+  }, [
+    searchParams,
+    mutate,
+    setSearchParams,
+    data,
+    isAlertOpened,
+    onOpen,
+    isLoading,
+  ]);
 
   return (
     <>
-      {!data?.data.hasThirdPartyAccess && (
+      {!isLoading && !data?.data.hasThirdPartyAccess && (
         <div className="mb-5">
           <Alert className="rounded-lg" status="warning">
             <AlertIcon />
@@ -42,7 +52,7 @@ const Home = () => {
       )}
 
       <div className="flex justify-between items-center mb-5">
-        {isLoading && <div>Carregando...</div>}
+        {isLoading && <Skeleton width="100%" height="50px"></Skeleton>}
         {!isLoading && !error && (
           <>
             <p className="font-bold">{data?.data.name}</p>

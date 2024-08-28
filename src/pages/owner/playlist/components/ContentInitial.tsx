@@ -4,6 +4,7 @@ import { PlaylistType } from "../../@types/PlaylistType";
 import { SetPlaylistInitialGenres } from "../../../../api/services/EstablishmentService";
 import { useState } from "react";
 import { useDisclosure } from "@chakra-ui/react";
+import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
 
 type Props = {
   playlist: PlaylistType;
@@ -14,11 +15,13 @@ const ContentInitial = ({ playlist, establishmentId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [genres, setGenres] = useState<string[]>([]);
 
-  const { mutate } = SetPlaylistInitialGenres(onClose);
+  const { mutate, isPending } = SetPlaylistInitialGenres(onClose);
 
   const onSetInitial = () => {
     mutate(genres);
   };
+
+  if (isPending) <LoadingSpinner />;
 
   return (
     <>

@@ -67,9 +67,6 @@ export const CardEstablishment = ({ establishment }: Props) => {
           </span>
         </div>
       </div>
-      {/* <Button variant="solid" disabled>
-        <Power color="#e11d48" />
-      </Button> */}
       <button disabled>
         <Power color="#d9d9d9" />
       </button>

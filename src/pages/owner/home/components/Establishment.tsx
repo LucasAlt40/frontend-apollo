@@ -3,7 +3,7 @@ import { CardEstablishment } from "./CardEstablishment";
 import CardPlaylist from "./CardPlaylist";
 import { GetEstablishment } from "../../../../api/services/EstablishmentService";
 import { OwnerType } from "../../../../@types/OwnerType";
-import LoadingSpinner from "../../../../components/LoadingSpinner/LoadingSpinner";
+import { Skeleton } from "@chakra-ui/react";
 
 type Props = {
   owner: OwnerType;
@@ -12,7 +12,7 @@ type Props = {
 const Establishment = ({ owner }: Props) => {
   const { data, isLoading, isError } = GetEstablishment();
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <Skeleton width="100%" height="80px"></Skeleton>;
 
   if (isError) return <div>Não foi possível carregar este componente.</div>;
 
