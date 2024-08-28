@@ -1,50 +1,55 @@
-# React + TypeScript + Vite
+# Apollo Music - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Apollo Music is an academic project developed for the Object-Oriented Development course. The goal of this project is to create an application for playlist control, adjusting the music played according to the preferences of the people present in a specific environment.
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: Used for building the user interface.
+- **TanStack Query**: For managing asynchronous data and caching.
+- **Axios**: For making HTTP requests.
+- **Chakra UI**: Component library for styling and responsive design.
+- **React Router DOM**: For managing routes in the application.
+- **Spring Boot** (Backend): The frontend communicates with a REST API developed in Spring Boot.
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To run the project locally, follow these steps:
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone the repository:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+   ```bash
+   git clone https://github.com/LucasAlt40/frontend-apollo.git
+   ```
+2. Navigate to the project directory:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+   ```bash
+   cd apollo-music-frontend
+    ```
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+3. Install the dependencies:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+   ```bash
+   npm install
+    ```
+4. Start the development server:
+
+  ```bash
+  npm run dev
+  ```
+
+## Main Features
+
+- **Authentication**: Login and access control for different types of users (Owner and User).
+- **Playlist Management**: Creation, editing, and deletion of playlists based on the environment.
+- **Route Redirection**: Automatic redirection of users based on the permissions and scopes defined in the JWT token.
+- **Backend Integration**: Communication with the backend developed in Spring Boot for data management and business logic execution.
+
+## Contributors
+
+- **Auguto G Serrano**
+- **Caio S Lopes**
+- **Eduardo P Carvalho**
+- **Lucas Alcantara**
+
+
+
