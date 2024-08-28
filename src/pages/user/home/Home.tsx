@@ -8,6 +8,7 @@ import DrawerAccount from "./components/DrawerAccount";
 import defaultImage from "../../../assets/images/default-establishment.jpg";
 import SimpleCard from "../../../components/SimpleCard/SimpleCard";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,7 +23,11 @@ const Home = () => {
     if (!user.username) {
       navigate("/owner");
     }
-  }, []); //eslint-disable-line
+    if (data?.data.isOff) {
+      Cookies.remove("accessToken");
+      navigate("/");
+    }
+  }, [user, data, navigate]);
 
   return (
     <>

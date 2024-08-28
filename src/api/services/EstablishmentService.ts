@@ -91,14 +91,25 @@ const TurnOnEstablishment = () => {
         isClosable: true,
       });
     },
-    onError: () =>
+    onError: (err: any) => {
+      if (err.response.status === 406) {
+        toast({
+          position: "top",
+          title: "Você precisa definir os gêneros inicias da playlist.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
       toast({
         position: "top",
         title: "Não foi possível ligar o estabelecimento",
         status: "error",
         duration: 5000,
         isClosable: true,
-      }),
+      });
+    },
   });
 
   return mutation;
@@ -152,7 +163,10 @@ const CreateEstablishmentPlaylist = () => {
       await apiCommonInstance.post("/establishment/playlist"),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["establishmentPlaylist", "establishment"],
+        queryKey: ["establishmentPlaylist"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["establishment"],
       });
       toast({
         position: "top",

@@ -9,18 +9,26 @@ import {
   useDisclosure,
   DrawerCloseButton,
 } from "@chakra-ui/react";
-import { User } from "react-feather";
+import { LogOut, User } from "react-feather";
 import { useEffect, useState } from "react";
 import { UserType } from "../../../../@types/UserType";
 import { getDecodedAccessToken } from "../../../../utils";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   user: UserType;
 };
 
 const DrawerAccount = ({ user }: Props) => {
+  const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [timeRemaining, setTimeRemaining] = useState<string>("");
+
+  const logoutUser = () => {
+    Cookies.remove("accessToken");
+    navigate("/");
+  };
 
   useEffect(() => {
     const decodedToken = getDecodedAccessToken();
@@ -73,6 +81,17 @@ const DrawerAccount = ({ user }: Props) => {
             <div className="mb-5">
               <p className="font-bold">Sessão</p>
               <p>Sua sessão expira em: {timeRemaining}</p>
+            </div>
+            <div className="mb-5">
+              <Button
+                className="w-full flex items-center "
+                colorScheme="red"
+                variant="link"
+                rightIcon={<LogOut size={16} />}
+                onClick={logoutUser}
+              >
+                <p className="underline w-full text-start ">Sair</p>
+              </Button>
             </div>
           </DrawerBody>
 
