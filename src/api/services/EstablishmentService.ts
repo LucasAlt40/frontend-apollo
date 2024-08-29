@@ -344,7 +344,7 @@ const NextMusic = () => {
     onSuccess: () => {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["playerState"] });
-      }, 350);
+      }, 500);
     },
     onError: () =>
       toast({
@@ -367,7 +367,7 @@ const PreviousMusic = () => {
     onSuccess: () => {
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["playerState"] });
-      }, 350);
+      }, 500);
     },
     onError: () =>
       toast({
