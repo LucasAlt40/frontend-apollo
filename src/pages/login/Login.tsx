@@ -23,7 +23,7 @@ const Login = () => {
       <main className={style.container}>
         <div className={style.title}>
           <h1>APOLLO MUSIC</h1>
-          <p>Lorem ipsum dolor sit amet consectetur.</p>
+          <p>A música nunca para.</p>
         </div>
         <BottomLogin />
       </main>
